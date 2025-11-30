@@ -1,5 +1,5 @@
-import Footer from "../Footer/Footer";
-import Nav from "../Nav/Nav";
+import Footer from "../../Components/Footer/Footer";
+import Nav from "../../Components/Nav/Nav";
 
 export default function Hero() {
   return (
