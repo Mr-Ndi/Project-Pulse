@@ -38,7 +38,7 @@ export default function Nav() {
             <Link to="/Feature" className="hover:underline hover:text-gray-300 cursor-pointer">Features</Link>
             </li>
           <li>
-            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</Link>
+            <Link to="/dashboard" className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</Link>
             </li>
           <li>
             <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</Link>
