@@ -66,7 +66,7 @@ export default function Login() {
           <Link to="#" className="text-blue-500 hover:underline">Forgot password?</Link>
           <span>
             Don’t have an account?{' '}
-            <Link to="#" className="text-blue-500 hover:underline">Sign up</Link>
+            <Link to="/signup" className="text-blue-500 hover:underline">Sign up</Link>
           </span>
         </div>
       </form>

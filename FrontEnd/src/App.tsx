@@ -3,7 +3,8 @@ import Hero from './Pages/Heru/Hero'
 import { Route, Routes } from 'react-router-dom'
 import Feature from './Pages/Features/Feature'
 import Dashboard from './Pages/Dashboard/Dashboard'
-import Login from './Pages/Login'
+import Login from './Pages/Login/Login'
+import Signup from './Pages/Signup/Signup'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Route path="/feature" element={<Feature />} />
       <Route path="/dashboard" element={<Dashboard/>} />
       <Route path="/login" element={<Login/>} />
+      <Route path="/signup" element={<Signup/>} />
     </Routes>
   )
 }
