@@ -65,12 +65,13 @@ export default function Nav() {
             ref={menuRef}
             className={`absolute right-4 top-full mt-2 w-48 bg-white rounded-md shadow-lg z-50 overflow-hidden ${open ? 'block' : 'hidden'}`}
           >
-            <a href="#" className="block px-4 py-2 text-black hover:bg-gray-100">Home</a>
-            <a href="#" className="block px-4 py-2 text-black hover:bg-gray-100">About</a>
-            <a href="#" className="block px-4 py-2 text-black hover:bg-gray-100">Services</a>
-            <a href="#" className="block px-4 py-2 text-black hover:bg-gray-100">Contact</a>
+            <a href="#" className="hover:underline hover:text-gray-300 cursor-pointer">Home</a>
+            <a href="#" className="hover:underline hover:text-gray-300 cursor-pointer">Features</a>
+            <a href="#" className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</a>
+            <a href="#" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</a>
             <div className="border-t px-4 py-2">
-              <button className="w-full text-left text-black font-semibold">Login</button>
+              <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Login</button>
+              <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Profile</button>
             </div>
           </div>
         </div>

@@ -22,6 +22,10 @@ export default function Hero() {
           <div className="bg-gray-300 w-full h-60 md:h-96 rounded-lg shadow-lg flex items-center justify-center text-black overflow-hidden">
             <img className="w-full h-full object-cover" src="/1218.jpg" alt="Black student" />
           </div>
+          <div className="py-10 flex justify-between items-center">
+            <button className="bg-blue-500 px-4 py-2 rounded">Get Started</button>
+            <button className="bg-blue-500 px-4 py-2 rounded">Go to Dashboard</button>
+          </div>
         </div>
 
       </div>
