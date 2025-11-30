@@ -1,7 +1,7 @@
 import './App.css'
-import Nav from './components/Nav/Nav'
-import Hero from './components/Heru/Hero'
-import Footer from './components/Footer/Footer'
+import Nav from './Pages/Nav/Nav'
+import Hero from './Pages/Heru/Hero'
+import Footer from './Pages/Footer/Footer'
 
 function App() {
   return (
