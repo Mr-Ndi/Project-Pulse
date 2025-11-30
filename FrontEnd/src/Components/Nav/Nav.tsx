@@ -49,7 +49,9 @@ export default function Nav() {
           <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">
             <Link to="/login" className="hover:underline hover:text-gray-300 cursor-pointer">Login</Link>
           </button>
-          <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Profile</button>
+          <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">
+            <Link to="/profile" className="hover:underline hover:text-gray-300 cursor-pointer">Profile</Link>
+          </button>
         </div>
 
         <div className="md:hidden">

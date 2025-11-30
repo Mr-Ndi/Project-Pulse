@@ -5,6 +5,7 @@ import Feature from './Pages/Features/Feature'
 import Dashboard from './Pages/Dashboard/Dashboard'
 import Login from './Pages/Login/Login'
 import Signup from './Pages/Signup/Signup'
+import Profile from './Pages/Profile/Profile'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard/>} />
       <Route path="/login" element={<Login/>} />
       <Route path="/signup" element={<Signup/>} />
+      <Route path="/profile" element={<Profile/>} />
     </Routes>
   )
 }
