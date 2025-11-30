@@ -26,7 +26,7 @@ export default function Nav() {
     <div className="bg-gradient-to-t from-blue-500 to-gray-700 p-4">
       <nav className="relative max-w-7xl mx-auto flex items-center justify-between px-4">
         <div className="flex items-center">
-          <span className="text-black font-bold text-xl md:text-3xl">Alexandria Library</span>
+          <span className="text-black font-bold text-xl md:text-3xl">Plan pulse</span>
         </div>
 
         <ul className="hidden md:flex gap-6 items-center text-white">
@@ -37,8 +37,8 @@ export default function Nav() {
         </ul>
 
         <div className="hidden md:flex items-center">
-          <button className="ml-6 text-black font-semibold">Login</button>
-          <button className="ml-6 text-black font-semibold">Profile</button>
+          <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Login</button>
+          <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Profile</button>
         </div>
 
         <div className="md:hidden">

@@ -5,19 +5,15 @@ export default function Hero() {
 
         <div className="flex-1 text-black">
           <h1 className="font-bold text-3xl md:text-6xl leading-tight mb-6">
-            Advance your <br />
-            engineering skills <br />
-            with us.
+            Advance your engineering skills with real projects.
           </h1>
 
           <p className="text-base md:text-lg leading-relaxed">
-            The Library of Alexandria was one of the most significant libraries of the ancient world.
-            It was founded in the 3rd century BCE in Alexandria, Black Egypt, and was said to contain
-            hundreds of thousands of scrolls and manuscripts from all over the world.
+            Build, track, and ship your projects in one simple dashboard designed for engineering teams and learners. Plan what to work on, see what’s in progress, and celebrate what you’ve completed—without getting lost in complex tools.<br/>
           </p>
 
           <p className="text-base md:text-lg mt-6">
-            What Knowledge Did We Lose With the Library of Alexandria? <br />
+            <br/>Create new projects in seconds, update their status as you work, and always know what needs your attention next. Whether you are practicing for internships or collaborating with a small team, Project Pulse keeps your progress clear and your focus sharp.
             <span className="font-semibold">Actually none because we got you back.</span>
           </p>
         </div>
