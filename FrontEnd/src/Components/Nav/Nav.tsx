@@ -41,7 +41,7 @@ export default function Nav() {
             <Link to="/dashboard" className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</Link>
             </li>
           <li>
-            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</Link>
+            <Link to="/contact" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</Link>
             </li>
         </ul>
 
