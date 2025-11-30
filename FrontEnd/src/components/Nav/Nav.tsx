@@ -31,13 +31,14 @@ export default function Nav() {
 
         <ul className="hidden md:flex gap-6 items-center text-white">
           <li className="hover:underline hover:text-gray-300 cursor-pointer">Home</li>
-          <li className="hover:underline hover:text-gray-300 cursor-pointer">About</li>
-          <li className="hover:underline hover:text-gray-300 cursor-pointer">Services</li>
+          <li className="hover:underline hover:text-gray-300 cursor-pointer">Features</li>
+          <li className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</li>
           <li className="hover:underline hover:text-gray-300 cursor-pointer">Contact</li>
         </ul>
 
         <div className="hidden md:flex items-center">
           <button className="ml-6 text-black font-semibold">Login</button>
+          <button className="ml-6 text-black font-semibold">Profile</button>
         </div>
 
         <div className="md:hidden">
