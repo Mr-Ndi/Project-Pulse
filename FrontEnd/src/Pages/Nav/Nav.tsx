@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
@@ -30,12 +31,18 @@ export default function Nav() {
         </div>
 
         <ul className="hidden md:flex gap-6 items-center text-white">
-          <li className="hover:underline hover:text-gray-300 cursor-pointer">Home</li>
-          <li className="hover:underline hover:text-gray-300 cursor-pointer">
-            <a href="/features">Features</a>
-          </li>
-          <li className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</li>
-          <li className="hover:underline hover:text-gray-300 cursor-pointer">Contact</li>
+          <li>
+            <Link to="/" className="hover:underline hover:text-gray-300 cursor-pointer">Home</Link>
+            </li>
+          <li>
+            <Link to="/Feature" className="hover:underline hover:text-gray-300 cursor-pointer">Features</Link>
+            </li>
+          <li>
+            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</Link>
+            </li>
+          <li>
+            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</Link>
+            </li>
         </ul>
 
         <div className="hidden md:flex items-center">
@@ -67,10 +74,10 @@ export default function Nav() {
             ref={menuRef}
             className={`absolute right-4 top-full mt-2 w-48 bg-white rounded-md shadow-lg z-50 overflow-hidden ${open ? 'block' : 'hidden'}`}
           >
-            <a href="#" className="hover:underline hover:text-gray-300 cursor-pointer">Home</a>
-            <a href="#" className="hover:underline hover:text-gray-300 cursor-pointer">Features</a>
-            <a href="#" className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</a>
-            <a href="#" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</a>
+            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Home</Link>
+            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Features</Link>
+            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</Link>
+            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</Link>
             <div className="border-t px-4 py-2">
               <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Login</button>
               <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Profile</button>
