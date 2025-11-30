@@ -46,7 +46,9 @@ export default function Nav() {
         </ul>
 
         <div className="hidden md:flex items-center">
-          <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Login</button>
+          <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">
+            <Link to="/login" className="hover:underline hover:text-gray-300 cursor-pointer">Login</Link>
+          </button>
           <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Profile</button>
         </div>
 
