@@ -11,7 +11,7 @@ async def get_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_s
     return credentials.credentials
 
 @projRouter.post("/register", response_model=newProjectSchema)
-async def c(user: newProjectSchema):
+async def new_project(user: newProjectSchema):
     return await create(user)
 
 @projRouter.patch("/delete")

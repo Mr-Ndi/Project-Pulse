@@ -1,3 +1,4 @@
+from time import time
 import uuid
 from sqlmodel import SQLModel, Field
 from typing import Optional
@@ -14,3 +15,4 @@ class ProjectBase(SQLModel, table=True):
     description: Optional[str] = None
     owner_id: uuid.UUID
     status: ProjectStatus = ProjectStatus.NOT_STARTED
+    start_date: Optional[str] = Field(default=time())
