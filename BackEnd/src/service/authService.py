@@ -31,7 +31,7 @@ async def authenticate_user(engine, email, password):
             token_data = {
                 "user_id": str(result_user.id),
                 "email": result_user.email,
-                "username": result_user.username,
+                "full_name": result_user.full_name,
                 "roles": result_user.role
             }
             token = create_access_token(data=token_data)

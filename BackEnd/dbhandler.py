@@ -13,7 +13,8 @@ DB_url = os.getenv("DATABASE_URL")
 if not DB_url:
     raise ValueError("DATABASE_URL environment variable not set. Please check your .env file.")
 try:
-    engine = create_async_engine(DB_url, echo=True, future=True, connect_args={"ssl":True})
+    # engine = create_async_engine(DB_url, echo=True, future=True, connect_args={"ssl":True})
+    engine = create_async_engine(DB_url, echo=True, future=True)
 except Exception as e:
     raise ConnectionError(f"Failed to create database engine: {e}")
 
