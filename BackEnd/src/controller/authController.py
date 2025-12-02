@@ -1,7 +1,7 @@
 import uuid
 from dbhandler import engine
 from fastapi import HTTPException
-from src.middleware.validation_schemas import userCreateSchema, UserUpdateSchema
+from src.middleware import userCreateSchema, UserUpdateSchema
 from src.service.authService import create_user, authenticate_user, update_user, get_user_by_id, get_all_users
 
 async def create(user: userCreateSchema):
