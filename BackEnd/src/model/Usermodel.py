@@ -1,7 +1,6 @@
 import uuid
 from sqlmodel import SQLModel, Field
 from typing import Optional
-from datetime import date
 from enum import Enum
 
 class UserRole(str, Enum):
