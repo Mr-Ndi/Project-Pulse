@@ -1,8 +1,9 @@
 import uuid
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from src.middleware.pvalidation import newProjectSchema, updateProjectSchema
 from src.controller.projectController import create, update, get_project, get_all, delete
+from utilities.jwtGenerator import decode_access_token
 
 projRouter = APIRouter()
 bearer_scheme = HTTPBearer(auto_error=True)
@@ -10,22 +11,52 @@ bearer_scheme = HTTPBearer(auto_error=True)
 async def get_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)):
     return credentials.credentials
 
-@projRouter.post("/register", response_model=newProjectSchema)
-async def new_project(user: newProjectSchema):
-    return await create(user)
+@projRouter.post("/register", dependencies=[Depends(bearer_scheme)], response_model=newProjectSchema)
+async def new_project(
+    user: newProjectSchema,
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)
+):
+    user_id = decode_access_token(credentials.credentials)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    return await create(user, user_id)
 
-@projRouter.patch("/delete")
-async def delete_project(project_id: uuid.UUID):
+@projRouter.patch("/delete", dependencies=[Depends(bearer_scheme)])
+async def delete_project(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    project_id: uuid.UUID = Depends()
+):
+    user_id = decode_access_token(credentials.credentials)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
     return await delete(project_id)
 
-@projRouter.get("/details")
-async def get_project_details(project_id: uuid.UUID):
+@projRouter.get("/details", dependencies=[Depends(bearer_scheme)])
+async def get_project_details(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    project_id: uuid.UUID = Depends()
+):
+    user_id = decode_access_token(credentials.credentials)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
     return await get_project(project_id)
 
-@projRouter.get("/all")
-async def get_all_projects():
+@projRouter.get("/all", dependencies=[Depends(bearer_scheme)])
+async def get_all_projects(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)
+):
+    user_id = decode_access_token(credentials.credentials)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
     return await get_all()
 
 @projRouter.put("/edit", dependencies=[Depends(bearer_scheme)])
-async def update_project_profile(project_id: uuid.UUID, project_update: updateProjectSchema):
+async def update_project_profile(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    project_id: uuid.UUID = Depends(),
+    project_update: updateProjectSchema = Depends()
+):
+    user_id = decode_access_token(credentials.credentials)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
     return await update(project_id, project_update)

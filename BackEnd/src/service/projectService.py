@@ -3,10 +3,14 @@ from src.model.projectmodel import ProjectBase
 from dbhandler import get_session_maker
 
 
-async def create_proj(engine, project):
+async def create_proj(engine, project, user_id):
     session = get_session_maker()
     async with session() as db_session:
-        proj_obj = ProjectBase.from_orm(project)
+        proj_obj = ProjectBase(
+            name=project.title,
+            description=project.description,
+            owner_id=user_id,
+        )
         if proj_obj.name:
             existing_project = await db_session.execute(
                 select(ProjectBase).filter(ProjectBase.name == proj_obj.name)

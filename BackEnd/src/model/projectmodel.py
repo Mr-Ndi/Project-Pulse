@@ -15,4 +15,5 @@ class ProjectBase(SQLModel, table=True):
     description: Optional[str] = None
     owner_id: uuid.UUID
     status: ProjectStatus = ProjectStatus.NOT_STARTED
-    start_date: Optional[str] = Field(default=time())
+    start_date: Optional[float] = Field(default_factory=time)
+    
