@@ -12,4 +12,4 @@ async def health():
 app.include_router(authRouter, prefix="/api", tags=["Auth"])
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=5000)
+    uvicorn.run("index:app", reload=True, host="127.0.0.1", port=5000)

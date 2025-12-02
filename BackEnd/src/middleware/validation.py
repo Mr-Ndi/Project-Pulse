@@ -6,9 +6,9 @@ from src.model.Usermodel import UserRole
 
 # Input schema - used for registration (does not include id)
 class userCreateSchema(BaseModel):
+    full_name: str = Field(..., example="First Tester")
     email: str = Field(..., example="tester@gmail.com")
     password: str = Field(..., example="Tester#250")
-    full_name: str = Field(..., example="First Tester")
     role: UserRole = UserRole.USER
     model_config = ConfigDict(from_attributes=True)
 
