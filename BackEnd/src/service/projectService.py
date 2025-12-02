@@ -7,7 +7,7 @@ async def create_proj(engine, project, user_id):
     session = get_session_maker()
     async with session() as db_session:
         proj_obj = ProjectBase(
-            name=project.title,
+            name=project.name,
             description=project.description,
             owner_id=user_id,
         )
