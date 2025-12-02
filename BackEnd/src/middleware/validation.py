@@ -1,7 +1,6 @@
 from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
-from datetime import date
 from src.model.Usermodel import UserRole
 
 # Input schema - used for registration (does not include id)

@@ -1,7 +1,8 @@
+import uuid
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from src.middleware.validation import UserBase, UserLoginSchema, userCreateSchema, UserUpdateSchema
-from src.controller.authController import create, authenticate, update
+from src.middleware.pvalidation import newProjectSchema, updateProjectSchema
+from src.controller.projectController import create, update, get_project, get_all, delete
 
 projRouter = APIRouter()
 bearer_scheme = HTTPBearer(auto_error=True)
@@ -9,14 +10,22 @@ bearer_scheme = HTTPBearer(auto_error=True)
 async def get_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)):
     return credentials.credentials
 
-@projRouter.post("/register", response_model=UserBase)
-async def register_user(user: userCreateSchema):
+@projRouter.post("/register", response_model=newProjectSchema)
+async def c(user: newProjectSchema):
     return await create(user)
 
 @projRouter.patch("/delete")
-async def login_user(data: UserLoginSchema):
-    return await authenticate(data.email, data.password)
+async def delete_project(project_id: uuid.UUID):
+    return await delete(project_id)
+
+@projRouter.get("/details")
+async def get_project_details(project_id: uuid.UUID):
+    return await get_project(project_id)
+
+@projRouter.get("/all")
+async def get_all_projects():
+    return await get_all()
 
 @projRouter.put("/edit", dependencies=[Depends(bearer_scheme)])
-async def update_user_profile(old_user: userCreateSchema, user_update: UserUpdateSchema):
-    return await update(old_user, user_update)
+async def update_project_profile(project_id: uuid.UUID, project_update: updateProjectSchema):
+    return await update(project_id, project_update)
