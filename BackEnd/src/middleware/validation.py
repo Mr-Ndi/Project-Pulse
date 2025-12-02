@@ -9,7 +9,6 @@ class userCreateSchema(BaseModel):
     full_name: str = Field(..., example="First Tester")
     email: str = Field(..., example="tester@gmail.com")
     password: str = Field(..., example="Tester#250")
-    role: UserRole = UserRole.USER
     model_config = ConfigDict(from_attributes=True)
 
     
