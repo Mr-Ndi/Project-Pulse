@@ -40,3 +40,13 @@ async def get_all_projects(engine):
     async with session() as db_session:
         projects = await db_session.execute(select(ProjectBase))
         return projects.scalars().all()
+    
+async def delete_project(engine, project_id):
+    session = get_session_maker()
+    async with session() as db_session:
+        project = await db_session.get(ProjectBase, project_id)
+        if not project:
+            return None
+        await db_session.delete(project)
+        await db_session.commit()
+        return project
