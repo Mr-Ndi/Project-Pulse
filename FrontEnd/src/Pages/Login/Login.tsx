@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Nav from "../../Components/Nav/Nav";
+import Footer from "../../Components/Footer/Footer";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -20,6 +22,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-white-700 to-blue-500">
+      <Nav/>
       <form
         className="bg-white bg-opacity-80 rounded-xl shadow-lg p-8 max-w-md w-full mx-auto"
         onSubmit={handleSubmit}
@@ -70,6 +73,7 @@ export default function Login() {
           </span>
         </div>
       </form>
+      <Footer/>
     </div>
   );
 }

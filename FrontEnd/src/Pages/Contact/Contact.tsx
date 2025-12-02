@@ -1,4 +1,6 @@
 import { useState } from "react";
+import Footer from "../../Components/Footer/Footer";
+import Nav from "../../Components/Nav/Nav";
 
 export default function Contact() {
   const [name, setName] = useState("");
@@ -15,6 +17,7 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-white-700 to-blue-500">
+      <Nav />
       <div className="max-w-3xl w-full mx-auto flex flex-col md:flex-row gap-8 bg-white bg-opacity-80 rounded-xl shadow-lg p-8">
         <form className="w-full md:w-7/12" onSubmit={handleSubmit}>
           <h2 className="text-2xl font-bold text-blue-500 mb-2">Contact Us</h2>
@@ -64,6 +67,7 @@ export default function Contact() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
