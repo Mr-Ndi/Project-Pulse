@@ -74,11 +74,11 @@ export default function DashboardPage() {
             <span className="text-lg font-bold">7</span>
           </div>
         </div>
-        <div className="max-w-5xl mx-auto mt-8 flex flex-col md:flex-row gap-6">
-          <div className="w-full md:w-7/12">
+        <div className="max-w-8xl mx-auto mt-8 flex flex-col md:flex-row gap-6">
+          <div className="w-full md:w-8/12">
             <ProjectList />
           </div>
-          <div className="w-full md:w-5/12">
+          <div className="w-full md:w-4/12">
             <ProjectForm />
           </div>
         </div>

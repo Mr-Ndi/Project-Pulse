@@ -13,8 +13,9 @@ export default function Profile() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-t from-white-700 to-blue-500">
       <Nav />
-      <main className="flex-1 px-4 py-8 max-w-2xl mx-auto">
-        <div className="bg-white bg-opacity-80 rounded-xl shadow-lg p-8 mb-8">
+      {/* <main className="flex-1 px-4 py-8 max-w-2xl mx-auto"> */}
+      <main className="flex-1 px-4 py-8 max-w-4xl mx-auto w-full">
+        <div className="bg-white bg-opacity-80 rounded-xl shadow-lg p-8 md:p-16 w-full max-w-lg md:max-w-3xl mb-8">
           <div className="flex items-center gap-6 mb-6">
             <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center text-3xl font-bold text-gray-500">
               {/* Placeholder for profile image */}
@@ -37,9 +38,9 @@ export default function Profile() {
             </div>
           </div>
           {/* Registration Table */}
-          <div className="mt-6">
+          <div className="mt-6 overflow-x-auto">
             <h3 className="font-bold text-lg mb-2">Registrations</h3>
-            <table className="w-full text-sm bg-white rounded shadow">
+            <table className="w-full min-w-[600px] text-sm bg-white rounded shadow">
               <thead>
                 <tr className="bg-blue-100 text-blue-700">
                   <th className="p-2">Application</th>
