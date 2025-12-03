@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../../App";
-import { useGetAllProjects } from "../../api/useProjectPulseApi";
+import { useState } from "react";
 import { useDeleteProject } from "../../api/useProjectPulseApi";
 import { FaTasks } from "react-icons/fa";
 
-export default function ProjectList() {
+interface ProjectListProps {
+  projects: any[];
+  loading: boolean;
+  error: any;
+  onRefresh: () => void;
+}
+
+export default function ProjectList({ projects, loading, error, onRefresh }: ProjectListProps) {
   const [editIdx, setEditIdx] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [editDesc, setEditDesc] = useState("");
-  const { isAuthenticated } = useAuth();
   const token = localStorage.getItem("token") || "";
-  const [getAllProjects, { data: projects, loading }] = useGetAllProjects();
   const [deleteProject] = useDeleteProject();
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (isAuthenticated && token) {
-      getAllProjects(token).catch(err => setError(err?.message || "Failed to fetch projects"));
-    }
-  }, [isAuthenticated, token, getAllProjects]);
+  const [localError, setLocalError] = useState("");
 
   const handleEdit = (idx: number) => {
     if (!projects) return;
@@ -26,21 +23,21 @@ export default function ProjectList() {
     setEditDesc(projects[idx].description);
   };
 
-  const handleSave = (idx: number) => {
+  const handleSave = (_idx: number) => {
     // TODO: Implement edit API
     setEditIdx(null);
   };
 
-  const handleStatusChange = (idx: number, status: string) => {
+  const handleStatusChange = (_idx: number, _status: string) => {
     // TODO: Implement status update API
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteProject({ id }, token);
-      getAllProjects(token);
+      onRefresh();
     } catch (err: any) {
-      setError(err?.message || "Delete failed");
+      setLocalError(err?.message || "Delete failed");
     }
   };
 
@@ -51,7 +48,8 @@ export default function ProjectList() {
         <h2 className="text-xl font-bold text-blue-500">Projects</h2>
       </div>
       <hr className="mb-4 border-blue-100" />
-      {error && <div className="text-red-500 mb-2">{error}</div>}
+      {error && <div className="text-red-500 mb-2">{error.message || "Failed to load projects"}</div>}
+      {localError && <div className="text-red-500 mb-2">{localError}</div>}
       <table className="w-full">
         <thead>
           <tr className="text-left text-blue-500">

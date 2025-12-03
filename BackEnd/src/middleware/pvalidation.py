@@ -4,9 +4,10 @@ from typing import Optional
 from src.model.Usermodel import UserRole
 
 class newProjectSchema(BaseModel):
+    id: Optional[UUID] = None
     name: str = Field(..., example="New Project")
     description: Optional[str] = Field(None, example="This is a new project.")
-    status: Optional[str] = Field("active", example="active")
+    status: Optional[str] = Field("not_started", example="not_started")
     model_config = ConfigDict(from_attributes=True)
 
 

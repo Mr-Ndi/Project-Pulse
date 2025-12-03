@@ -22,7 +22,7 @@ function useApi(fn) {
     }
   }, [fn]);
 
-  return [call, { loading, error, data }];
+  return [call, { loading, error, data }] as const;
 }
 
 // Auth hooks

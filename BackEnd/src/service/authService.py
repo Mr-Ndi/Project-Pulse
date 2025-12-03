@@ -38,17 +38,26 @@ async def authenticate_user(engine, email, password):
             return token
         return None
 
-async def update_user(engine, old_user, user_update):
+async def update_user(engine, user_id, user_update):
     session = get_session_maker()
     async with session() as db_session:
-        old_user.username = user_update.username
-        old_user.email = user_update.email
-        old_user.full_name = user_update.full_name
-        old_user.date_of_birth = user_update.date_of_birth
-        old_user.gender = user_update.gender
+        user = await db_session.get(UserBase, user_id)
+        if not user:
+            return None
+            
+        if user_update.email:
+            user.email = user_update.email
+        if user_update.full_name:
+            user.full_name = user_update.full_name
+        if user_update.password:
+            user.password = hash_password(user_update.password)
+        if user_update.role:
+            user.role = user_update.role
+            
+        db_session.add(user)
         await db_session.commit()
-        await db_session.refresh(old_user)
-        return old_user
+        await db_session.refresh(user)
+        return user
 
 async def get_user_by_id(engine, id):
     session = get_session_maker()

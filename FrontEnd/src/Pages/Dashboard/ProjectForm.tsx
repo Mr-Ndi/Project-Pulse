@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useRegisterProject } from "../../api/useProjectPulseApi";
 
-export default function ProjectForm() {
+export default function ProjectForm({ onRefresh }: { onRefresh: () => void }) {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
-  const [status, setStatus] = useState("Not Started");
+  const [status, setStatus] = useState("not_started");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [token] = useState(""); // TODO: Replace with real token from auth context
+  const token = localStorage.getItem("token") || "";
   const [registerProject, { loading }] = useRegisterProject();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,8 +23,8 @@ export default function ProjectForm() {
       setSuccess("Project added!");
       setName("");
       setDesc("");
-      setStatus("Not Started");
-      // TODO: Refresh project list
+      setStatus("not_started");
+      onRefresh();
     } catch (err: any) {
       setError(err?.message || "Failed to add project");
     }
@@ -59,9 +59,9 @@ export default function ProjectForm() {
           value={status}
           onChange={e => setStatus(e.target.value)}
         >
-          <option>Not Started</option>
-          <option>In Progress</option>
-          <option>Completed</option>
+          <option value="not_started">Not Started</option>
+          <option value="in_progress">In Progress</option>
+          <option value="completed">Completed</option>
         </select>
       </div>
       <button className="bg-blue-500 text-white w-full py-2 rounded font-bold shadow hover:bg-blue-600" type="submit" disabled={loading}>

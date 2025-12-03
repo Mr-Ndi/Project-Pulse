@@ -13,13 +13,13 @@ async def get_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_s
 
 @projRouter.post("/register", dependencies=[Depends(bearer_scheme)], response_model=newProjectSchema)
 async def new_project(
-    user: newProjectSchema,
+    project: newProjectSchema = Body(...),
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)
 ):
     user_id = decode_access_token(credentials.credentials)
     if not user_id:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
-    return await create(user, user_id)
+    return await create(project, user_id)
 
 @projRouter.patch("/delete", dependencies=[Depends(bearer_scheme)])
 async def delete_project(

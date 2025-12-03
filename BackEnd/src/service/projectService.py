@@ -10,6 +10,7 @@ async def create_proj(engine, project, user_id):
             name=project.name,
             description=project.description,
             owner_id=user_id,
+            status=project.status if project.status else "not_started"
         )
         if proj_obj.name:
             existing_project = await db_session.execute(
