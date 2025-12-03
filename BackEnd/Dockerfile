@@ -9,8 +9,9 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install --upgrade pip && pip install --no-cache -r requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache -r requirement.txt
+COPY requirement.txt .
+RUN pip install --upgrade pip && pip install --no-cache -r requirement.txt
 
 EXPOSE 3500
 CMD ["python3", "index.py"]
