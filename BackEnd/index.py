@@ -1,4 +1,6 @@
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from src.routes.authRouter import authRouter
@@ -9,6 +11,15 @@ app = FastAPI(
     title="Project Pulse Backend API",
     redoc_url=None,
     swagger_ui_parameters={"defaultModelsExpandDepth": -1}
+)
+
+# Allow CORS from anywhere
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")
