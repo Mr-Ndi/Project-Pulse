@@ -1,34 +1,47 @@
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../App";
+import { useGetAllProjects } from "../../api/useProjectPulseApi";
+import { useDeleteProject } from "../../api/useProjectPulseApi";
 import { FaTasks } from "react-icons/fa";
-import { useState } from "react";
 
 export default function ProjectList() {
-  const [projects, setProjects] = useState([
-    { name: "Website Redesign", description: "Update homepage and dashboard", status: "In Progress" },
-    { name: "API Integration", description: "Connect backend to frontend", status: "Not Started" },
-    { name: "Testing Suite", description: "Add unit and integration tests", status: "Completed" },
-  ]);
   const [editIdx, setEditIdx] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [editDesc, setEditDesc] = useState("");
+  const { isAuthenticated } = useAuth();
+  const token = localStorage.getItem("token") || "";
+  const [getAllProjects, { data: projects, loading }] = useGetAllProjects();
+  const [deleteProject] = useDeleteProject();
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      getAllProjects(token).catch(err => setError(err?.message || "Failed to fetch projects"));
+    }
+  }, [isAuthenticated, token, getAllProjects]);
 
   const handleEdit = (idx: number) => {
-    setEditIdx(idx);
+    if (!projects) return;
     setEditName(projects[idx].name);
     setEditDesc(projects[idx].description);
   };
 
   const handleSave = (idx: number) => {
-    const updated = [...projects];
-    updated[idx].name = editName;
-    updated[idx].description = editDesc;
-    setProjects(updated);
+    // TODO: Implement edit API
     setEditIdx(null);
   };
 
   const handleStatusChange = (idx: number, status: string) => {
-    const updated = [...projects];
-    updated[idx].status = status;
-    setProjects(updated);
+    // TODO: Implement status update API
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteProject({ id }, token);
+      getAllProjects(token);
+    } catch (err: any) {
+      setError(err?.message || "Delete failed");
+    }
   };
 
   return (
@@ -38,6 +51,7 @@ export default function ProjectList() {
         <h2 className="text-xl font-bold text-blue-500">Projects</h2>
       </div>
       <hr className="mb-4 border-blue-100" />
+      {error && <div className="text-red-500 mb-2">{error}</div>}
       <table className="w-full">
         <thead>
           <tr className="text-left text-blue-500">
@@ -48,9 +62,15 @@ export default function ProjectList() {
           </tr>
         </thead>
         <tbody>
-          {projects.map((proj, idx) => (
+          {loading && (
+            <tr><td colSpan={4} className="text-center py-4">Loading projects...</td></tr>
+          )}
+          {projects && projects.length === 0 && (
+            <tr><td colSpan={4} className="text-center py-4">No projects found.</td></tr>
+          )}
+          {projects && projects.map((proj: any, idx: number) => (
             <tr
-              key={idx}
+              key={proj.id || idx}
               className={`border-t ${idx % 2 === 0 ? 'bg-blue-50' : 'bg-white'} hover:bg-blue-100`}
             >
               <td className="py-3">
@@ -77,10 +97,9 @@ export default function ProjectList() {
               </td>
               <td className="py-3">
                 <select
-                  className="bg-white border rounded px-3 py-1 w-36"
+                  className="border rounded px-2 py-1"
                   value={proj.status}
                   onChange={e => handleStatusChange(idx, e.target.value)}
-                  disabled={editIdx !== idx}
                 >
                   <option>Not Started</option>
                   <option>In Progress</option>
@@ -90,28 +109,21 @@ export default function ProjectList() {
               <td className="py-3 flex gap-2">
                 {editIdx === idx ? (
                   <>
-                    <button
-                      className="bg-green-500 text-white px-3 py-1 rounded text-sm shadow hover:bg-green-600"
-                      onClick={() => handleSave(idx)}
-                    >
+                    <button className="bg-green-500 text-white px-2 py-1 rounded" onClick={() => handleSave(idx)}>
                       Save
                     </button>
-                    <button
-                      className="bg-gray-400 text-white px-3 py-1 rounded text-sm shadow hover:bg-gray-500"
-                      onClick={() => setEditIdx(null)}
-                    >
+                    <button className="bg-gray-400 text-white px-2 py-1 rounded" onClick={() => setEditIdx(null)}>
                       Cancel
                     </button>
                   </>
                 ) : (
                   <>
-                    <button
-                      className="bg-blue-500 text-white px-3 py-1 rounded text-sm shadow hover:bg-blue-600"
-                      onClick={() => handleEdit(idx)}
-                    >
+                    <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={() => handleEdit(idx)}>
                       Edit
                     </button>
-                    <button className="bg-red-500 text-white px-3 py-1 rounded text-sm shadow hover:bg-red-600">Delete</button>
+                    <button className="bg-red-500 text-white px-2 py-1 rounded" onClick={() => handleDelete(proj.id)}>
+                      Delete
+                    </button>
                   </>
                 )}
               </td>

@@ -1,8 +1,3 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Nav from "../../Components/Nav/Nav";
-import Footer from "../../Components/Footer/Footer";
-
 export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -11,10 +6,11 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const [register, registerState] = useRegisterUser();
 
   const validateEmail = (email: string) => /.+@.+\..+/.test(email);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -30,11 +26,15 @@ export default function Signup() {
       setError("Passwords do not match.");
       return;
     }
-    // Simulate success
-    setSuccess("Account created! Redirecting...");
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 1500);
+    try {
+      await register({ name, email, password });
+      setSuccess("Account created! Redirecting...");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
+    } catch (err: any) {
+      setError(err?.message || "Registration failed");
+    }
   };
 
   return (
@@ -47,6 +47,8 @@ export default function Signup() {
         >
           <h2 className="text-2xl font-bold text-blue-500 mb-2 text-center">Sign Up</h2>
           <p className="text-gray-700 text-center mb-6">Create an account to start tracking your projects.</p>
+          {error && <div className="text-red-500 text-center mb-2">{error}</div>}
+          {success && <div className="text-green-500 text-center mb-2">{success}</div>}
           <div className="mb-4">
             <label className="block text-xs font-bold text-gray-700 mb-1">Full Name</label>
             <input
@@ -87,17 +89,17 @@ export default function Signup() {
               required
             />
           </div>
-          {error && <div className="text-red-500 text-xs mb-4">{error}</div>}
-          {success && <div className="text-green-500 text-xs mb-4">{success}</div>}
           <button
+            className="bg-blue-500 text-white w-full py-2 rounded font-bold shadow hover:bg-blue-600"
             type="submit"
-            className="bg-blue-500 text-white w-full py-2 rounded font-bold shadow hover:bg-blue-600 mb-2"
+            disabled={registerState?.loading}
           >
-            Create account
+            {registerState?.loading ? "Signing up..." : "Sign Up"}
           </button>
-          <div className="text-xs text-center mt-2">
-            Already have an account?{' '}
-            <Link to="/login" className="text-blue-500 hover:underline">Login</Link>
+          <div className="mt-4 text-center">
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Already have an account? Login
+            </Link>
           </div>
         </form>
       </main>

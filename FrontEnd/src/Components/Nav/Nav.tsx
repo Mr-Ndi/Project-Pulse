@@ -1,5 +1,34 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../App';
+
+function AuthNavLinks() {
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  if (isAuthenticated) {
+    return (
+      <>
+        <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold" onClick={() => navigate('/dashboard')}>
+          Dashboard
+        </button>
+        <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold" onClick={() => navigate('/profile')}>
+          Profile
+        </button>
+        <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold" onClick={() => { logout(); navigate('/login'); }}>
+          Logout
+        </button>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold" onClick={() => navigate('/login')}>
+          Login
+        </button>
+      </>
+    );
+  }
+}
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
@@ -33,26 +62,15 @@ export default function Nav() {
         <ul className="hidden md:flex gap-6 items-center text-white">
           <li>
             <Link to="/" className="hover:underline hover:text-gray-300 cursor-pointer">Home</Link>
-            </li>
+          </li>
           <li>
             <Link to="/Feature" className="hover:underline hover:text-gray-300 cursor-pointer">Features</Link>
-            </li>
-          <li>
-            <Link to="/dashboard" className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</Link>
-            </li>
+          </li>
           <li>
             <Link to="/contact" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</Link>
-            </li>
+          </li>
         </ul>
-
-        <div className="hidden md:flex items-center">
-          <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">
-            <Link to="/login" className="hover:underline hover:text-gray-300 cursor-pointer">Login</Link>
-          </button>
-          <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">
-            <Link to="/profile" className="hover:underline hover:text-gray-300 cursor-pointer">Profile</Link>
-          </button>
-        </div>
+        <AuthNavLinks />
 
         <div className="md:hidden">
           <button
@@ -80,11 +98,9 @@ export default function Nav() {
           >
             <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Home</Link>
             <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Features</Link>
-            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Dashboard</Link>
             <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</Link>
             <div className="border-t px-4 py-2">
-              <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Login</button>
-              <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold">Profile</button>
+              <AuthNavLinks />
             </div>
           </div>
         </div>

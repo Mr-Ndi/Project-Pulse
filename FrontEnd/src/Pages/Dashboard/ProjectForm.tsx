@@ -1,13 +1,40 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useRegisterProject } from "../../api/useProjectPulseApi";
 
 export default function ProjectForm() {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [status, setStatus] = useState("Not Started");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [token] = useState(""); // TODO: Replace with real token from auth context
+  const [registerProject, { loading }] = useRegisterProject();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    if (!name || !desc) {
+      setError("Please enter project name and description.");
+      return;
+    }
+    try {
+      await registerProject({ name, description: desc, status }, token);
+      setSuccess("Project added!");
+      setName("");
+      setDesc("");
+      setStatus("Not Started");
+      // TODO: Refresh project list
+    } catch (err: any) {
+      setError(err?.message || "Failed to add project");
+    }
+  };
 
   return (
-    <form className="bg-white bg-opacity-80 rounded-xl shadow-lg p-8 max-w-md mx-auto">
+    <form className="bg-white bg-opacity-80 rounded-xl shadow-lg p-8 max-w-md mx-auto" onSubmit={handleSubmit}>
       <h2 className="text-xl font-bold text-blue-500 mb-4">Add Project</h2>
+      {error && <div className="text-red-500 mb-2">{error}</div>}
+      {success && <div className="text-green-500 mb-2">{success}</div>}
       <div className="mb-4">
         <label className="block text-xs font-bold text-gray-700 mb-1">Project Name</label>
         <input
@@ -37,8 +64,8 @@ export default function ProjectForm() {
           <option>Completed</option>
         </select>
       </div>
-      <button className="bg-blue-500 text-white w-full py-2 rounded font-bold shadow hover:bg-blue-600" type="submit">
-        Add Project
+      <button className="bg-blue-500 text-white w-full py-2 rounded font-bold shadow hover:bg-blue-600" type="submit" disabled={loading}>
+        {loading ? "Adding..." : "Add Project"}
       </button>
     </form>
   );

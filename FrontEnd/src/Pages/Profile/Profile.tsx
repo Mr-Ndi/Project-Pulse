@@ -1,5 +1,3 @@
-import Nav from "../../Components/Nav/Nav";
-import Footer from "../../Components/Footer/Footer";
 export default function Profile() {
   // Example static data
   const user = {
@@ -9,6 +7,9 @@ export default function Profile() {
     created: "10/5/2020 12:21 PM MDT",
     lastLogin: "11/6/2020 02:04 PM MST",
   };
+  // TODO: Replace with real user data from backend
+  const [updateProfile, updateState] = useUpdateUserProfile();
+  // TODO: Add state and handlers for profile update
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-t from-white-700 to-blue-500">

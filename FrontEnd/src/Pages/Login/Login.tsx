@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useLoginUser } from "../../api/useProjectPulseApi";
+import { useAuth } from "../../App";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
 
@@ -8,16 +10,34 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loginApi, loginApiState] = useLoginUser();
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Dummy validation
+    setError("");
+    setSuccess("");
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
-    // Simulate login failure
-    setError("Invalid email or password");
+    try {
+      const res = await loginApi({ email, password });
+      // Backend returns the token as a raw string
+      if (typeof res === 'string' && res.length > 0) {
+        login(res);
+        setSuccess("Login successful!");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
+      } else {
+        setError("No token received");
+      }
+    } catch (err: any) {
+      setError(err?.message || "Login failed");
+    }
   };
 
   return (
@@ -30,6 +50,8 @@ export default function Login() {
         >
           <h2 className="text-2xl font-bold text-blue-500 mb-2 text-center">Login</h2>
           <p className="text-gray-700 text-center mb-6">Sign in to access your projects.</p>
+          {error && <div className="text-red-500 text-center mb-2">{error}</div>}
+          {success && <div className="text-green-500 text-center mb-2">{success}</div>}
           <div className="mb-4">
             <label className="block text-xs font-bold text-gray-700 mb-1">Email</label>
             <input
@@ -59,12 +81,12 @@ export default function Login() {
               </button>
             </div>
           </div>
-          {error && <div className="text-red-500 text-xs mb-4">{error}</div>}
           <button
-            type="submit"
             className="bg-blue-500 text-white w-full py-2 rounded font-bold shadow hover:bg-blue-600 mb-2"
+            type="submit"
+            disabled={loginApiState.loading}
           >
-            Login
+            {loginApiState.loading ? "Logging in..." : "Login"}
           </button>
           <div className="flex justify-between text-xs mt-2">
             <Link to="#" className="text-blue-500 hover:underline">Forgot password?</Link>
