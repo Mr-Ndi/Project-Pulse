@@ -6,7 +6,7 @@ from src.model.Usermodel import UserRole
 class newProjectSchema(BaseModel):
     name: str = Field(..., example="New Project")
     description: Optional[str] = Field(None, example="This is a new project.")
-    sratus: Optional[str] = Field("active", example="active")
+    status: Optional[str] = Field("active", example="active")
     model_config = ConfigDict(from_attributes=True)
 
 

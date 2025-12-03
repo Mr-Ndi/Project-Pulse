@@ -13,5 +13,5 @@ RUN pip install --upgrade pip && pip install --no-cache -r requirement.txt
 COPY requirement.txt .
 RUN pip install --upgrade pip && pip install --no-cache -r requirement.txt
 
-EXPOSE 3500
+EXPOSE 8000
 CMD ["python3", "index.py"]

@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import os
 
 from src.routes.authRouter import authRouter
 from src.routes.projRouter import projRouter
@@ -30,4 +31,5 @@ app.include_router(authRouter, prefix="/api", tags=["Authentication"])
 app.include_router(projRouter, prefix="/plan", tags=["Project"])
 
 if __name__ == "__main__":
-    uvicorn.run("index:app", reload=True, host="127.0.0.1", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    uvicorn.run("index:app", reload=True, host="0.0.0.0", port=port)
