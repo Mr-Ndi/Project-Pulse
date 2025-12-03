@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from src.middleware.validation import UserBase, UserLoginSchema, userCreateSchema, UserUpdateSchema
 from src.controller.authController import create, authenticate, update
@@ -21,7 +21,7 @@ async def login_user(data: UserLoginSchema):
 @authRouter.put("/update-profile", dependencies=[Depends(bearer_scheme)])
 async def update_user_profile(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
-    user_update: UserUpdateSchema = Depends()
+    user_update: UserUpdateSchema = Body(...)
 ):
     user_id = decode_access_token(credentials.credentials)
     if not user_id:
