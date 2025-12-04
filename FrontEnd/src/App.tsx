@@ -12,7 +12,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 // Simple Auth Context
 const AuthContext = createContext({
   isAuthenticated: false,
-  login: (token: string) => {},
+  login: (_token: string) => {},
   logout: () => {},
 });
 

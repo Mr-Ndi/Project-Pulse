@@ -40,8 +40,8 @@ export default function Profile() {
     }
   }, []);
 
-  const [updateProfile, updateState] = useUpdateUserProfile();
   // TODO: Add state and handlers for profile update
+  // const [updateProfile, updateState] = useUpdateUserProfile();
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-t from-white-700 to-blue-500">
