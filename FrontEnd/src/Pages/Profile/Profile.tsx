@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
-import { useUpdateUserProfile } from "../../api/useProjectPulseApi";
+// import { useUpdateUserProfile } from "../../api/useProjectPulseApi";
 
 // Helper function to decode JWT
 function decodeJWT(token: string) {
