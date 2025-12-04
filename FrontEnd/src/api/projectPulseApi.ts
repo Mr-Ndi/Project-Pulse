@@ -1,8 +1,8 @@
 // src/api/projectPulseApi.ts
 // Centralized API service for Project Pulse backend
 
-// const BASE_URL = "https://ppulse-backend.onrender.com";
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "https://ppulse-backend.onrender.com";
+// const BASE_URL = "http://localhost:8000";
 // Helper for requests
 async function request(path: string, options: RequestInit = {}) {
   const url = `${BASE_URL}${path}`;
@@ -35,7 +35,7 @@ async function request(path: string, options: RequestInit = {}) {
 }
 
 // --- Authentication ---
-export function registerUser(payload: { email: string; password: string; name: string }) {
+export function registerUser(payload: { email: string; password: string; full_name: string }) {
   return request("/api/register", {
     method: "POST",
     body: JSON.stringify(payload),
