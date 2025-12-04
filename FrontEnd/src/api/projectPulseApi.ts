@@ -5,15 +5,32 @@
 const BASE_URL = "http://localhost:8000";
 // Helper for requests
 async function request(path: string, options: RequestInit = {}) {
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const url = `${BASE_URL}${path}`;
+  console.log('[API Request]', options.method || 'GET', url, options.body ? JSON.parse(options.body as string) : null);
+
+  const { headers: optionsHeaders, ...restOptions } = options;
+  const res = await fetch(url, {
+    ...restOptions,
     headers: {
       "Content-Type": "application/json",
-      ...(options.headers || {}),
+      ...(optionsHeaders || {}),
     },
-    ...options,
   });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw data || { message: res.statusText };
+
+  const text = await res.text();
+  console.log('[API Response]', res.status, res.statusText, text);
+
+  let data;
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch (e) {
+    data = {};
+  }
+
+  if (!res.ok) {
+    console.error('[API Error]', res.status, data);
+    throw data || { message: res.statusText };
+  }
   return data;
 }
 

@@ -26,7 +26,18 @@ export default function ProjectForm({ onRefresh }: { onRefresh: () => void }) {
       setStatus("not_started");
       onRefresh();
     } catch (err: any) {
-      setError(err?.message || "Failed to add project");
+      // Show detailed backend error if available
+      if (err?.detail) {
+        setError(
+          Array.isArray(err.detail)
+            ? err.detail.map((d: any) => d.msg).join("; ")
+            : err.detail
+        );
+      } else {
+        setError(err?.message || "Failed to add project");
+      }
+      // Also log the error for debugging
+      console.error('[ProjectForm] Backend error:', err);
     }
   };
 

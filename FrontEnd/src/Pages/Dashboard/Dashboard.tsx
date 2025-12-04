@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
-import ProjectStats from "./ProjectStats";
 import ProjectList from "./ProjectList";
 import ProjectForm from "./ProjectForm";
 import { useAuth } from "../../App";
@@ -47,7 +46,6 @@ export default function DashboardPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-black mb-2">Dashboard</h1>
           <p className="text-base text-gray-700">Track all your projects in one place.</p>
         </header>
-        <ProjectStats total={stats.total} />
         {/* Project status circles */}
         <div className="flex justify-center gap-8 my-8">
           {/* Not Started */}
