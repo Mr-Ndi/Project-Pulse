@@ -31,44 +31,60 @@ async def delete_project(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     project_id: uuid.UUID = Body(..., embed=True, alias="id")
 ):
-    user_id = decode_access_token(credentials.credentials)
-    if not user_id:
+    user_id_str = decode_access_token(credentials.credentials)
+    if not user_id_str:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
-    return await delete(project_id)
+    try:
+        user_id = uuid.UUID(user_id_str)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=401, detail="Invalid user ID in token")
+    return await delete(project_id, user_id)
 
 @projRouter.get("/details", dependencies=[Depends(bearer_scheme)])
 async def get_project_details(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     project_id: uuid.UUID = Query(..., alias="id")
 ):
-    user_id = decode_access_token(credentials.credentials)
-    if not user_id:
+    user_id_str = decode_access_token(credentials.credentials)
+    if not user_id_str:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
-    return await get_project(project_id)
+    try:
+        user_id = uuid.UUID(user_id_str)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=401, detail="Invalid user ID in token")
+    return await get_project(project_id, user_id)
 
 @projRouter.get("/all", dependencies=[Depends(bearer_scheme)])
 async def get_all_projects(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)
 ):
-    user_id = decode_access_token(credentials.credentials)
-    if not user_id:
+    user_id_str = decode_access_token(credentials.credentials)
+    if not user_id_str:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
-    return await get_all()
+    try:
+        user_id = uuid.UUID(user_id_str)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=401, detail="Invalid user ID in token")
+    return await get_all(user_id)
 
 @projRouter.put("/edit", dependencies=[Depends(bearer_scheme)])
 async def update_project_profile(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     request_data: updateProjectRequestSchema = Body(...)
 ):
-    user_id = decode_access_token(credentials.credentials)
-    if not user_id:
+    user_id_str = decode_access_token(credentials.credentials)
+    if not user_id_str:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
+    try:
+        user_id = uuid.UUID(user_id_str)
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=401, detail="Invalid user ID in token")
     project_update = updateProjectSchema(
         name=request_data.name,
         description=request_data.description,
         status=request_data.status
     )
-    return await update(request_data.project_id, project_update)
+    return await update(request_data.project_id, project_update, user_id)
 
 @projRouter.post("/debug", response_model=dict)
 async def debug_project_payload(payload: str = Body(...)):
