@@ -41,61 +41,65 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-t from-white-700 to-blue-500">
+    <div className="min-h-screen flex flex-col bg-white">
       <Nav />
       <main className="flex-1 flex items-center justify-center">
-        <form
-          className="bg-white bg-opacity-80 rounded-xl shadow-lg p-8 max-w-md w-full mx-auto"
-          onSubmit={handleSubmit}
-        >
-          <h2 className="text-2xl font-bold text-blue-500 mb-2 text-center">Login</h2>
-          <p className="text-gray-700 text-center mb-6">Sign in to access your projects.</p>
-          {error && <div className="text-red-500 text-center mb-2">{error}</div>}
-          {success && <div className="text-green-500 text-center mb-2">{success}</div>}
-          <div className="mb-4">
-            <label className="block text-xs font-bold text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              className="w-full px-3 py-2 border rounded"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-            />
+        <div className="w-full max-w-md mx-auto">
+          <div className="bg-blue-700 rounded-t-xl p-8">
+            <h2 className="text-2xl font-bold text-white mb-2 text-center">Login</h2>
+            <p className="text-blue-100 text-center mb-6">Sign in to access your projects.</p>
           </div>
-          <div className="mb-4">
-            <label className="block text-xs font-bold text-gray-700 mb-1">Password</label>
-            <div className="relative">
+          <form
+            className="bg-white rounded-b-xl shadow-lg p-8"
+            onSubmit={handleSubmit}
+          >
+            {error && <div className="text-red-500 text-center mb-2">{error}</div>}
+            {success && <div className="text-green-500 text-center mb-2">{success}</div>}
+            <div className="mb-4">
+              <label className="block text-xs font-bold text-gray-700 mb-1">Email</label>
               <input
-                type={showPassword ? "text" : "password"}
+                type="email"
                 className="w-full px-3 py-2 border rounded"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 required
               />
-              <button
-                type="button"
-                className="absolute right-2 top-2 text-xs text-blue-500"
-                onClick={() => setShowPassword(v => !v)}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
             </div>
-          </div>
-          <button
-            className="bg-blue-500 text-white w-full py-2 rounded font-bold shadow hover:bg-blue-600 mb-2"
-            type="submit"
-            disabled={loginApiState.loading}
-          >
-            {loginApiState.loading ? "Logging in..." : "Login"}
-          </button>
-          <div className="flex justify-between text-xs mt-2">
-            <Link to="#" className="text-blue-500 hover:underline">Forgot password?</Link>
-            <span>
-              Don’t have an account?{' '}
-              <Link to="/signup" className="text-blue-500 hover:underline">Sign up</Link>
-            </span>
-          </div>
-        </form>
+            <div className="mb-4">
+              <label className="block text-xs font-bold text-gray-700 mb-1">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="w-full px-3 py-2 border rounded"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-2 top-2 text-xs text-blue-500"
+                  onClick={() => setShowPassword(v => !v)}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
+            </div>
+            <button
+              className="bg-blue-700 text-white w-full py-2 rounded font-bold shadow hover:bg-blue-800 mb-2"
+              type="submit"
+              disabled={loginApiState.loading}
+            >
+              {loginApiState.loading ? "Logging in..." : "Login"}
+            </button>
+            <div className="flex justify-between text-xs mt-2">
+              <Link to="#" className="text-blue-700 hover:underline">Forgot password?</Link>
+              <span>
+                Don’t have an account?{' '}
+                <Link to="/signup" className="text-blue-700 hover:underline">Sign up</Link>
+              </span>
+            </div>
+          </form>
+        </div>
       </main>
       <Footer />
     </div>
