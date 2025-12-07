@@ -1,22 +1,36 @@
 import { useEffect, useState, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
 import ProjectList from "./ProjectList";
 import ProjectForm from "./ProjectForm";
 import { useAuth } from "../../hooks/useAuth";
 import { useGetAllProjects } from "../../api/useProjectPulseApi";
+import Toast from "../../Components/Toast/Toast";
 
 export default function DashboardPage() {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
   const token = localStorage.getItem("token") || "";
   const [getAllProjects, { data: projects, loading, error }] = useGetAllProjects();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   useEffect(() => {
     if (isAuthenticated && token) {
       getAllProjects(token);
     }
   }, [isAuthenticated, token, getAllProjects, refreshTrigger]);
+
+  useEffect(() => {
+    // Check if we came from login with success state
+    const state = location.state as { showSuccess?: boolean; message?: string } | null;
+    if (state?.showSuccess && state?.message) {
+      setToast({ message: state.message, type: 'success' });
+      // Clear the state to prevent toast showing on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const handleRefresh = () => {
     setRefreshTrigger(prev => prev + 1);
@@ -45,6 +59,15 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Nav />
+      {toast && (
+        <div className="fixed top-6 right-6 z-50">
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        </div>
+      )}
       <main className="flex-1 px-4 py-8 max-w-11/12 mx-auto w-full">
         <header className="mb-8">
           <div className="bg-blue-700 rounded-xl p-8 mb-4">
