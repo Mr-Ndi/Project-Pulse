@@ -2,10 +2,17 @@ import { useState } from "react";
 import { useDeleteProject, useEditProjectProfile } from "../../api/useProjectPulseApi";
 import { FaTasks } from "react-icons/fa";
 
+interface Project {
+  name: string;
+  description?: string;
+  status: string;
+  [key: string]: unknown;
+}
+
 interface ProjectListProps {
-  projects: any[];
+  projects: Project[];
   loading: boolean;
-  error: any;
+  error: unknown;
   onRefresh: () => void;
 }
 
@@ -33,9 +40,9 @@ export default function ProjectList({ projects, loading, error, onRefresh }: Pro
     setEditStatus(statusValue);
   };
 
-  const handleSave = async (idx: number) => {
+  const handleSave = async (idx: number): Promise<void> => {
     if (!projects) return;
-    const project = projects[idx];
+    const project: Project = projects[idx];
     
     // Validate required fields
     if (!editName.trim()) {
@@ -61,10 +68,11 @@ export default function ProjectList({ projects, loading, error, onRefresh }: Pro
       setEditDesc("");
       setEditStatus("");
       onRefresh();
-    } catch (err: any) {
-      const errorMsg = err?.detail 
-        ? (Array.isArray(err.detail) ? err.detail.map((d: any) => d.msg || d).join("; ") : err.detail)
-        : err?.message || "Failed to update project";
+    } catch (err: unknown) {
+      const error = err as Record<string, unknown>;
+      const errorMsg = error?.detail 
+        ? (Array.isArray(error.detail) ? (error.detail as Array<{msg: string}>).map((d) => d.msg || d).join("; ") : String(error.detail))
+        : (error?.message as string) || "Failed to update project";
       setLocalError(errorMsg);
     }
   };
@@ -77,12 +85,13 @@ export default function ProjectList({ projects, loading, error, onRefresh }: Pro
     setLocalError("");
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string): Promise<void> => {
     try {
       await deleteProject({ id }, token);
       onRefresh();
-    } catch (err: any) {
-      setLocalError(err?.message || "Delete failed");
+    } catch (err: unknown) {
+      const error = err as Record<string, unknown>;
+      setLocalError((error?.message as string) || "Delete failed");
     }
   };
 
@@ -158,7 +167,7 @@ export default function ProjectList({ projects, loading, error, onRefresh }: Pro
                 </td>
               </tr>
             )}
-            {projects && projects.map((proj: any, idx: number) => (
+            {projects && projects.map((proj: Project, idx: number) => (
               <tr
                 key={proj.id || idx}
                 className={`border-b border-gray-100 hover:bg-blue-50 transition-colors ${

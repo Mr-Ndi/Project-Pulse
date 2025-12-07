@@ -49,10 +49,11 @@ export default function Signup() {
       setTimeout(() => {
         navigate("/login");
       }, 1500);
-    } catch (err: any) {
-      const errorMsg = err?.detail 
-        ? (Array.isArray(err.detail) ? err.detail.map((d: any) => d.msg || d).join("; ") : err.detail)
-        : err?.message || "Registration failed";
+    } catch (err: unknown) {
+      const error = err as Record<string, unknown>;
+      const errorMsg = error?.detail 
+        ? (Array.isArray(error.detail) ? (error.detail as Array<{msg: string}>).map((d) => d.msg || d).join("; ") : String(error.detail))
+        : (error?.message as string) || "Registration failed";
       setError(errorMsg);
     }
   };

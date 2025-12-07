@@ -25,13 +25,14 @@ export default function ProjectForm({ onRefresh }: { onRefresh: () => void }) {
       setDesc("");
       setStatus("not_started");
       onRefresh();
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Show detailed backend error if available
-      if (err?.detail) {
+      const error = err as Record<string, unknown>;
+      if (error?.detail) {
         setError(
-          Array.isArray(err.detail)
-            ? err.detail.map((d: any) => d.msg).join("; ")
-            : err.detail
+          Array.isArray(error.detail)
+            ? (error.detail as Array<{msg: string}>).map((d) => d.msg).join("; ")
+            : String(error.detail)
         );
       } else {
         setError(err?.message || "Failed to add project");

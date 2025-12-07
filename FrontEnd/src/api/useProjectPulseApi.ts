@@ -2,12 +2,12 @@ import { useState, useCallback } from "react";
 import * as api from "./projectPulseApi";
 
 // Generic hook for API calls
-function useApi(fn: (...args: any[]) => Promise<any>) {
+function useApi<T>(fn: (...args: unknown[]) => Promise<T>) {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
-  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<unknown>(null);
+  const [data, setData] = useState<T | null>(null);
 
-  const call = useCallback(async (...args: any[]) => {
+  const call = useCallback(async (...args: unknown[]): Promise<T> => {
     setLoading(true);
     setError(null);
     try {

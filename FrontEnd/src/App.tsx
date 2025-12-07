@@ -7,62 +7,34 @@ import Login from './Pages/Login/Login'
 import Signup from './Pages/Signup/Signup'
 import Profile from './Pages/Profile/Profile'
 import Contact from './Pages/Contact/Contact'
-import { createContext, useContext, useState, useEffect } from 'react'
-
-// Simple Auth Context
-const AuthContext = createContext({
-  isAuthenticated: false,
-  login: (_token: string) => {},
-  logout: () => {},
-});
-
-export function useAuth() {
-  return useContext(AuthContext);
-}
-
-function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    // Check localStorage for token
-    setIsAuthenticated(!!localStorage.getItem('token'));
-  }, []);
-
-  const login = (token: string) => {
-    localStorage.setItem('token', token);
-    setIsAuthenticated(true);
-  };
-  const logout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-  };
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
+import { AuthProvider } from './context/AuthContext'
+import { useAuth } from './hooks/useAuth'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? children : <Navigate to="/login" />;
 }
 
+function AppContent() {
+  return (
+    <Routes>
+      <Route path="/" element={<Hero />} />
+      <Route path="/feature" element={<Feature />} />
+      <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+      <Route path="/contact" element={<Contact />} />
+    </Routes>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/" element={<Hero />} />
-        <Route path="/feature" element={<Feature />} />
-        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
+      <AppContent />
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;

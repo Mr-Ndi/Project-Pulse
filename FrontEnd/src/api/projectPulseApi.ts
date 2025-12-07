@@ -23,7 +23,7 @@ async function request(path: string, options: RequestInit = {}) {
   let data;
   try {
     data = text ? JSON.parse(text) : {};
-  } catch (e) {
+  } catch {
     data = {};
   }
 
@@ -49,7 +49,7 @@ export function loginUser(payload: { email: string; password: string }) {
   });
 }
 
-export function updateUserProfile(payload: any, token: string) {
+export function updateUserProfile(payload: Record<string, unknown>, token: string) {
   return request("/api/update-profile", {
     method: "PUT",
     body: JSON.stringify(payload),
@@ -58,7 +58,7 @@ export function updateUserProfile(payload: any, token: string) {
 }
 
 // --- Project ---
-export function registerProject(payload: any, token: string) {
+export function registerProject(payload: Record<string, unknown>, token: string) {
   return request("/plan/register", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -66,7 +66,7 @@ export function registerProject(payload: any, token: string) {
   });
 }
 
-export function deleteProject(payload: any, token: string) {
+export function deleteProject(payload: Record<string, unknown>, token: string) {
   return request("/plan/delete", {
     method: "PATCH",
     body: JSON.stringify(payload),
@@ -88,7 +88,7 @@ export function getAllProjects(token: string) {
   });
 }
 
-export function editProjectProfile(payload: any, token: string) {
+export function editProjectProfile(payload: Record<string, unknown>, token: string) {
   return request("/plan/edit", {
     method: "PUT",
     body: JSON.stringify(payload),

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useLoginUser } from "../../api/useProjectPulseApi";
-import { useAuth } from "../../App";
+import { useAuth } from "../../hooks/useAuth";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
 
@@ -35,8 +35,9 @@ export default function Login() {
       } else {
         setError("No token received");
       }
-    } catch (err: any) {
-      setError(err?.message || "Login failed");
+    } catch (err: unknown) {
+      const error = err as Record<string, unknown>;
+      setError((error?.message as string) || "Login failed");
     }
   };
 

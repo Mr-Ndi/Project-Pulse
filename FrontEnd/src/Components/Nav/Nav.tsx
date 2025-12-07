@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../App';
+import { useAuth } from '../../hooks/useAuth';
 
 function AuthNavLinks() {
   const { isAuthenticated, logout } = useAuth();

@@ -12,7 +12,7 @@ function decodeJWT(token: string) {
       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
     return JSON.parse(jsonPayload);
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -30,11 +30,13 @@ export default function Profile() {
     if (token) {
       const decoded = decodeJWT(token);
       if (decoded) {
-        setUser({
-          name: decoded.full_name || "User",
-          email: decoded.email || "",
-          userId: decoded.user_id || "",
-          role: decoded.roles || "user",
+        Promise.resolve().then(() => {
+          setUser({
+            name: decoded.full_name || "User",
+            email: decoded.email || "",
+            userId: decoded.user_id || "",
+            role: decoded.roles || "user",
+          });
         });
       }
     }

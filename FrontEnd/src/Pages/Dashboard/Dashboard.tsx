@@ -3,7 +3,7 @@ import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
 import ProjectList from "./ProjectList";
 import ProjectForm from "./ProjectForm";
-import { useAuth } from "../../App";
+import { useAuth } from "../../hooks/useAuth";
 import { useGetAllProjects } from "../../api/useProjectPulseApi";
 
 export default function DashboardPage() {
@@ -22,13 +22,16 @@ export default function DashboardPage() {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  interface Project {
+    status: string;
+  }
   const stats = useMemo(() => {
     if (!projects) return { total: 0, notStarted: 0, inProgress: 0, completed: 0 };
     return {
       total: projects.length,
-      notStarted: projects.filter((p: any) => p.status === "not_started" || p.status === "Not Started").length,
-      inProgress: projects.filter((p: any) => p.status === "in_progress" || p.status === "In Progress").length,
-      completed: projects.filter((p: any) => p.status === "completed" || p.status === "Completed").length,
+      notStarted: projects.filter((p: Project) => p.status === "not_started" || p.status === "Not Started").length,
+      inProgress: projects.filter((p: Project) => p.status === "in_progress" || p.status === "In Progress").length,
+      completed: projects.filter((p: Project) => p.status === "completed" || p.status === "Completed").length,
     };
   }, [projects]);
 
