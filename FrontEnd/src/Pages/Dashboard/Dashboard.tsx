@@ -40,18 +40,20 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[white] ">
+    <div className="min-h-screen flex flex-col bg-white">
       <Nav />
       <main className="flex-1 px-4 py-8 max-w-11/12 mx-auto w-full">
         <header className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-black mb-2">Dashboard</h1>
-          <p className="text-base text-gray-700">Track all your projects in one place.</p>
+          <div className="bg-blue-700 rounded-xl p-8 mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">Dashboard</h1>
+            <p className="text-blue-100">Track all your projects in one place.</p>
+          </div>
         </header>
         
         {/* Project status cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {/* Not Started */}
-          <div className="bg-white bg-opacity-80 rounded-xl shadow-md p-6 border-l-4 border-yellow-400">
+          <div className="bg-white rounded-xl shadow-md p-6 border-t-4 border-yellow-400">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Not Started</h3>
               <div className="w-12 h-12 relative">
@@ -79,7 +81,7 @@ export default function DashboardPage() {
           </div>
           
           {/* In Progress */}
-          <div className="bg-white bg-opacity-80 rounded-xl shadow-md p-6 border-l-4 border-blue-400">
+          <div className="bg-white rounded-xl shadow-md p-6 border-t-4 border-blue-400">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">In Progress</h3>
               <div className="w-12 h-12 relative">
@@ -107,7 +109,7 @@ export default function DashboardPage() {
           </div>
           
           {/* Completed */}
-          <div className="bg-white bg-opacity-80 rounded-xl shadow-md p-6 border-l-4 border-green-400">
+          <div className="bg-white rounded-xl shadow-md p-6 border-t-4 border-green-400">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Completed</h3>
               <div className="w-12 h-12 relative">
