@@ -19,6 +19,6 @@ class ComplaintBase(SQLModel, table=True):
     name: str = Field(max_length=255)
     email: str = Field(max_length=255)
     message: str
-    status: ComplaintStatus = Field(default=ComplaintStatus.NEW)
+     status: str = Field(default="new")
     created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
     updated_at: Optional[datetime] = Field(default_factory=datetime.utcnow)

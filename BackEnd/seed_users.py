@@ -41,7 +41,7 @@ async def seed_admin(user_data: dict):
             print(f"Admin already exists: {user_data['email']}. Skipping.")
             return
 
-        # Use raw insert to avoid Enum coercion issues; DB enum values: 'admin', 'Project_owner'
+        # Use raw insert to avoid Enum coercion issues; DB enum values: 'ADMIN', 'USER'
         await session.execute(
             text(
                 """
@@ -54,7 +54,7 @@ async def seed_admin(user_data: dict):
                 "email": user_data["email"],
                 "full_name": user_data.get("full_name"),
                 "password": hash_password(user_data["password"]),
-                "role": "admin",
+                "role": "ADMIN",
             },
         )
         await session.commit()

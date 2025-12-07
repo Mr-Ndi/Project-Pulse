@@ -13,7 +13,7 @@ async def create_complaint(engine, complaint_data):
             name=complaint_data.name,
             email=complaint_data.email,
             message=complaint_data.message,
-            status=ComplaintStatus.NEW,
+                status="new",
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow()
         )
