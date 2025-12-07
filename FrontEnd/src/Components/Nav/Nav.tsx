@@ -54,6 +54,11 @@ export default function Nav() {
             </Link>
           </li>
           <li>
+            <Link to="/about" className="text-gray-700 hover:text-blue-700 font-medium transition">
+              About
+            </Link>
+          </li>
+          <li>
             <Link to="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition">
               Contact
             </Link>
@@ -63,6 +68,11 @@ export default function Nav() {
               <li>
                 <Link to="/dashboard" className="text-gray-700 hover:text-blue-700 font-medium transition">
                   Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link to="/users" className="text-gray-700 hover:text-blue-700 font-medium transition">
+                  Users
                 </Link>
               </li>
               <li>
@@ -140,6 +150,13 @@ export default function Nav() {
                   Features
                 </Link>
                 <Link 
+                  to="/about" 
+                  className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                  onClick={() => setOpen(false)}
+                >
+                  About
+                </Link>
+                <Link 
                   to="/contact" 
                   className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
                   onClick={() => setOpen(false)}
@@ -154,6 +171,13 @@ export default function Nav() {
                       onClick={() => setOpen(false)}
                     >
                       Dashboard
+                    </Link>
+                    <Link 
+                      to="/users" 
+                      className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                      onClick={() => setOpen(false)}
+                    >
+                      Users
                     </Link>
                     <Link 
                       to="/profile" 

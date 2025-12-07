@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
 import { useAuth } from "../../hooks/useAuth";
-import { useUpdateUserProfile } from "../../api/useProjectPulseApi";
+import { useUpdateUserProfile, useChangePassword } from "../../api/useProjectPulseApi";
 
 // Helper function to decode JWT
 function decodeJWT(token: string) {
@@ -23,6 +23,7 @@ export default function Profile() {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [updateProfile, updateState] = useUpdateUserProfile();
+  const [changePassword, changePasswordState] = useChangePassword();
   
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState({
@@ -134,8 +135,14 @@ export default function Profile() {
         return;
       }
 
-      // For now, we'll show a success message
-      // Once backend endpoint is ready, implement the actual API call
+      await changePassword(
+        {
+          current_password: passwordForm.current_password,
+          new_password: passwordForm.new_password,
+        },
+        token
+      );
+      
       setSuccess("Password updated successfully!");
       setPasswordForm({ current_password: "", new_password: "", confirm_password: "" });
       

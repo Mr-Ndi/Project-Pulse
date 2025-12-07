@@ -35,6 +35,9 @@ export function useLoginUser() {
 export function useUpdateUserProfile() {
   return useApi(api.updateUserProfile);
 }
+export function useChangePassword() {
+  return useApi(api.changePassword);
+}
 
 // Project hooks
 export function useRegisterProject() {

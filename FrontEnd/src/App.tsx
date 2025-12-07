@@ -7,6 +7,8 @@ import Login from './Pages/Login/Login'
 import Signup from './Pages/Signup/Signup'
 import Profile from './Pages/Profile/Profile'
 import Contact from './Pages/Contact/Contact'
+import About from './Pages/About/About'
+import Users from './Pages/Users/Users'
 import { AuthProvider } from './context/AuthContext'
 import { useAuth } from './hooks/useAuth'
 
@@ -54,6 +56,8 @@ function AppContent() {
       <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
     </Routes>
   );
 }

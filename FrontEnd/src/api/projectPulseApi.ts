@@ -59,6 +59,14 @@ export function updateUserProfile(payload: Record<string, unknown>, token: strin
   });
 }
 
+export function changePassword(payload: { current_password: string; new_password: string }, token: string) {
+  return request("/api/change-password", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
 // --- Project ---
 export function registerProject(payload: Record<string, unknown>, token: string) {
   return request("/plan/register", {
