@@ -53,13 +53,13 @@ export default function Nav() {
   }, [open])
 
   return (
-    <div className="bg-gradient-to-t from-blue-500 to-gray-700 p-4">
+    <div className="bg-gray-50 bg-opacity-90 shadow-md py-4 sticky top-0 z-50">
       <nav className="relative max-w-7xl mx-auto flex items-center justify-between px-4">
         <div className="flex items-center">
           <span className="text-black font-bold text-xl md:text-3xl">Plan pulse</span>
         </div>
 
-        <ul className="hidden md:flex gap-6 items-center text-white">
+        <ul className="hidden md:flex gap-6 items-center">
           <li>
             <Link to="/" className="hover:underline hover:text-gray-300 cursor-pointer">Home</Link>
           </li>

@@ -40,9 +40,9 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-t from-white-700 to-blue-500">
+    <div className="min-h-screen flex flex-col bg-[white] ">
       <Nav />
-      <main className="flex-1 px-4 py-8 max-w-7xl mx-auto w-full">
+      <main className="flex-1 px-4 py-8 max-w-11/12 mx-auto w-full">
         <header className="mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-black mb-2">Dashboard</h1>
           <p className="text-base text-gray-700">Track all your projects in one place.</p>
