@@ -6,6 +6,7 @@ import os
 
 from src.routes.authRouter import authRouter
 from src.routes.projRouter import projRouter
+from src.routes.complaintRouter import complaintRouter
 
 app = FastAPI(
     docs_url="/docs",
@@ -29,6 +30,7 @@ async def health():
 
 app.include_router(authRouter, prefix="/api", tags=["Authentication"])
 app.include_router(projRouter, prefix="/plan", tags=["Project"])
+app.include_router(complaintRouter, prefix="/api", tags=["Complaints"])
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

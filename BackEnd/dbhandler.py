@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 import os
 import logging
 
-logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
-logging.getLogger("asyncpg").setLevel(logging.WARNING)
+logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
+logging.getLogger("asyncpg").setLevel(logging.ERROR)
 
 load_dotenv()
 DB_url = os.getenv("DATABASE_URL")
@@ -14,7 +14,7 @@ if not DB_url:
     raise ValueError("DATABASE_URL environment variable not set. Please check your .env file.")
 try:
     # engine = create_async_engine(DB_url, echo=True, future=True, connect_args={"ssl":True})
-    engine = create_async_engine(DB_url, echo=True, future=True)
+    engine = create_async_engine(DB_url, echo=False, future=True)
 except Exception as e:
     raise ConnectionError(f"Failed to create database engine: {e}")
 
