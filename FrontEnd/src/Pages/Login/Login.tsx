@@ -4,23 +4,23 @@ import { useLoginUser } from "../../api/useProjectPulseApi";
 import { useAuth } from "../../hooks/useAuth";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
+import Toast from "../../Components/Toast/Toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const [loginApi, loginApiState] = useLoginUser();
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setToast(null);
+    
     if (!email || !password) {
-      setError("Please enter both email and password.");
+      setToast({ message: "Please enter both email and password", type: 'error' });
       return;
     }
     try {
@@ -28,22 +28,39 @@ export default function Login() {
       // Backend returns the token as a raw string
       if (typeof res === 'string' && res.length > 0) {
         login(res);
-        setSuccess("Login successful!");
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1000);
+        navigate("/dashboard", { state: { showSuccess: true, message: "Login successful! Welcome back 🎉" } });
       } else {
-        setError("No token received");
+        setToast({ message: "Invalid email or password. Please try again.", type: 'error' });
       }
     } catch (err: unknown) {
       const error = err as Record<string, unknown>;
-      setError((error?.message as string) || "Login failed");
+      const errorMessage = error?.message as string;
+      
+      // Handle specific error messages from backend
+      if (errorMessage?.toLowerCase().includes("password")) {
+        setToast({ message: "Incorrect password. Please try again.", type: 'error' });
+      } else if (errorMessage?.toLowerCase().includes("email") || errorMessage?.toLowerCase().includes("user")) {
+        setToast({ message: "Email not found. Please check your email or sign up.", type: 'error' });
+      } else if (errorMessage?.toLowerCase().includes("credentials")) {
+        setToast({ message: "Invalid credentials. Please check your email and password.", type: 'error' });
+      } else {
+        setToast({ message: errorMessage || "Login failed. Please try again.", type: 'error' });
+      }
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Nav />
+      {toast && (
+        <div className="fixed top-6 right-6 z-50">
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        </div>
+      )}
       <main className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-md mx-auto">
           <div className="bg-blue-700 rounded-t-xl p-8">
@@ -54,8 +71,6 @@ export default function Login() {
             className="bg-white rounded-b-xl shadow-lg p-8"
             onSubmit={handleSubmit}
           >
-            {error && <div className="text-red-500 text-center mb-2">{error}</div>}
-            {success && <div className="text-green-500 text-center mb-2">{success}</div>}
             <div className="mb-4">
               <label className="block text-xs font-bold text-gray-700 mb-1">Email</label>
               <input

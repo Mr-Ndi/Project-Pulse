@@ -29,7 +29,9 @@ async function request(path: string, options: RequestInit = {}) {
 
   if (!res.ok) {
     console.error('[API Error]', res.status, data);
-    throw data || { message: res.statusText };
+    // Extract error message from various formats
+    const errorMessage = data?.detail || data?.message || data?.error || res.statusText;
+    throw { message: errorMessage, status: res.status, ...data };
   }
   return data;
 }

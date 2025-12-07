@@ -1,26 +1,25 @@
 import React, { useState } from "react";
 import { useRegisterProject } from "../../api/useProjectPulseApi";
+import Toast from "../../Components/Toast/Toast";
 
 export default function ProjectForm({ onRefresh }: { onRefresh: () => void }) {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [status, setStatus] = useState("not_started");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const token = localStorage.getItem("token") || "";
   const [registerProject, { loading }] = useRegisterProject();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setToast(null);
     if (!name || !desc) {
-      setError("Please enter project name and description.");
+      setToast({ message: "Please enter project name and description.", type: 'error' });
       return;
     }
     try {
       await registerProject({ name, description: desc, status }, token);
-      setSuccess("Project added!");
+      setToast({ message: "Project added successfully! 🎉", type: 'success' });
       setName("");
       setDesc("");
       setStatus("not_started");
@@ -29,13 +28,12 @@ export default function ProjectForm({ onRefresh }: { onRefresh: () => void }) {
       // Show detailed backend error if available
       const error = err as Record<string, unknown>;
       if (error?.detail) {
-        setError(
-          Array.isArray(error.detail)
-            ? (error.detail as Array<{msg: string}>).map((d) => d.msg).join("; ")
-            : String(error.detail)
-        );
+        const errorMsg = Array.isArray(error.detail)
+          ? (error.detail as Array<{msg: string}>).map((d) => d.msg).join("; ")
+          : String(error.detail);
+        setToast({ message: errorMsg, type: 'error' });
       } else {
-        setError(err?.message || "Failed to add project");
+        setToast({ message: (error?.message as string) || "Failed to add project", type: 'error' });
       }
       // Also log the error for debugging
       console.error('[ProjectForm] Backend error:', err);
@@ -43,33 +41,32 @@ export default function ProjectForm({ onRefresh }: { onRefresh: () => void }) {
   };
 
   return (
-    <form className="bg-white bg-opacity-80 rounded-xl shadow-md p-6 sticky top-4" onSubmit={handleSubmit}>
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-        <span className="w-1 h-8 bg-blue-600 mr-3 rounded"></span>
-        Add New Project
-      </h2>
-      
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 text-sm">
-          {error}
+    <>
+      {toast && (
+        <div className="fixed top-6 right-6 z-50">
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
         </div>
       )}
-      {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4 text-sm">
-          {success}
-        </div>
-      )}
-      
-      <div className="mb-5">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Project Name <span className="text-red-500">*</span>
-        </label>
-        <input
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          placeholder="Enter project name"
-          required
+      <form className="bg-white bg-opacity-80 rounded-xl shadow-md p-6 sticky top-4" onSubmit={handleSubmit}>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <span className="w-1 h-8 bg-blue-600 mr-3 rounded"></span>
+          Add New Project
+        </h2>
+        
+        <div className="mb-5">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Project Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholder="Enter project name"
+            required
         />
       </div>
       
@@ -115,5 +112,6 @@ export default function ProjectForm({ onRefresh }: { onRefresh: () => void }) {
         )}
       </button>
     </form>
+    </>
   );
 }

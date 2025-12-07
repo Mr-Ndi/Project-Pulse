@@ -1,15 +1,21 @@
 import { createContext, useState, useEffect, ReactNode } from 'react'
 
-export type AuthContextType = {
+type AuthContextType = {
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Re-export for use in hooks
+export { AuthContext };
+export type { AuthContextType };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check localStorage for token
@@ -17,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Use a microtask to avoid cascading renders
     Promise.resolve().then(() => {
       setIsAuthenticated(!!token);
+      setIsLoading(false);
     });
   }, []);
 
@@ -30,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

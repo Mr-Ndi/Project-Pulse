@@ -2,83 +2,109 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
-function AuthNavLinks() {
+export default function Nav() {
+  const [open, setOpen] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  if (isAuthenticated) {
-    return (
-      <>
-        <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold" onClick={() => navigate('/dashboard')}>
-          Dashboard
-        </button>
-        <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold" onClick={() => navigate('/profile')}>
-          Profile
-        </button>
-        <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold" onClick={() => { logout(); navigate('/login'); }}>
-          Logout
-        </button>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <button className="hover:underline hover:text-gray-300 cursor-pointer ml-6 text-black font-semibold" onClick={() => navigate('/login')}>
-          Login
-        </button>
-      </>
-    );
-  }
-}
-
-export default function Nav() {
-  const [open, setOpen] = useState(false)
-  const buttonRef = useRef<HTMLButtonElement | null>(null)
-  const menuRef = useRef<HTMLDivElement | null>(null)
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     function handleOutside(e: MouseEvent) {
-      if (!open) return
-      const target = e.target as Node
+      if (!open) return;
+      const target = e.target as Node;
       if (
         menuRef.current &&
         !menuRef.current.contains(target) &&
         buttonRef.current &&
         !buttonRef.current.contains(target)
       ) {
-        setOpen(false)
+        setOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleOutside)
-    return () => document.removeEventListener('mousedown', handleOutside)
-  }, [open])
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
+  }, [open]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+    setOpen(false);
+  };
 
   return (
-    <div className="bg-gray-50 bg-opacity-90 shadow-md py-4 sticky top-0 z-50">
+    <div className="bg-white shadow-md py-4 sticky top-0 z-50">
       <nav className="relative max-w-7xl mx-auto flex items-center justify-between px-4">
         <div className="flex items-center">
-          <span className="text-black font-bold text-xl md:text-3xl">Plan pulse</span>
+          <Link to="/" className="text-blue-700 font-bold text-xl md:text-2xl hover:text-blue-800">
+            Project Pulse
+          </Link>
         </div>
 
+        {/* Desktop Navigation */}
         <ul className="hidden md:flex gap-6 items-center">
           <li>
-            <Link to="/" className="hover:underline hover:text-gray-300 cursor-pointer">Home</Link>
+            <Link to="/" className="text-gray-700 hover:text-blue-700 font-medium transition">
+              Home
+            </Link>
           </li>
           <li>
-            <Link to="/Feature" className="hover:underline hover:text-gray-300 cursor-pointer">Features</Link>
+            <Link to="/feature" className="text-gray-700 hover:text-blue-700 font-medium transition">
+              Features
+            </Link>
           </li>
           <li>
-            <Link to="/contact" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</Link>
+            <Link to="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition">
+              Contact
+            </Link>
           </li>
+          {isAuthenticated ? (
+            <>
+              <li>
+                <Link to="/dashboard" className="text-gray-700 hover:text-blue-700 font-medium transition">
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/profile" 
+                  className="text-gray-700 hover:text-blue-700 transition"
+                  title="Profile"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </Link>
+              </li>
+              <li>
+                <button 
+                  onClick={handleLogout}
+                  className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition font-medium"
+                >
+                  Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link 
+                to="/login"
+                className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition font-medium"
+              >
+                Login
+              </Link>
+            </li>
+          )}
         </ul>
-        <AuthNavLinks />
 
+        {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button
             ref={buttonRef}
             aria-controls="mobile-menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="p-2 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300"
+            className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {open ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,20 +117,75 @@ export default function Nav() {
             )}
           </button>
 
-          <div
-            id="mobile-menu"
-            ref={menuRef}
-            className={`absolute right-4 top-full mt-2 w-48 bg-white rounded-md shadow-lg z-50 overflow-hidden ${open ? 'block' : 'hidden'}`}
-          >
-            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Home</Link>
-            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Features</Link>
-            <Link to="#" className="hover:underline hover:text-gray-300 cursor-pointer">Contact</Link>
-            <div className="border-t px-4 py-2">
-              <AuthNavLinks />
+          {/* Mobile Menu */}
+          {open && (
+            <div
+              id="mobile-menu"
+              ref={menuRef}
+              className="absolute right-4 top-full mt-2 w-56 bg-white rounded-lg shadow-lg z-50 overflow-hidden border border-gray-200"
+            >
+              <div className="flex flex-col">
+                <Link 
+                  to="/" 
+                  className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition"
+                  onClick={() => setOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link 
+                  to="/feature" 
+                  className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                  onClick={() => setOpen(false)}
+                >
+                  Features
+                </Link>
+                <Link 
+                  to="/contact" 
+                  className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                  onClick={() => setOpen(false)}
+                >
+                  Contact
+                </Link>
+                {isAuthenticated ? (
+                  <>
+                    <Link 
+                      to="/dashboard" 
+                      className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                      onClick={() => setOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <Link 
+                      to="/profile" 
+                      className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t flex items-center gap-2"
+                      onClick={() => setOpen(false)}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      Profile
+                    </Link>
+                    <button 
+                      onClick={handleLogout}
+                      className="px-4 py-3 text-left text-white bg-blue-700 hover:bg-blue-800 transition border-t font-medium"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link 
+                    to="/login"
+                    className="px-4 py-3 text-left text-white bg-blue-700 hover:bg-blue-800 transition border-t font-medium"
+                    onClick={() => setOpen(false)}
+                  >
+                    Login
+                  </Link>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </nav>
     </div>
-  )
+  );
 }
