@@ -2,12 +2,13 @@ import { useState, useCallback } from "react";
 import * as api from "./projectPulseApi";
 
 // Generic hook for API calls
-function useApi<T>(fn: (...args: unknown[]) => Promise<T>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function useApi<T extends (...args: any[]) => Promise<any>>(fn: T) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<unknown>(null);
-  const [data, setData] = useState<T | null>(null);
+  const [data, setData] = useState<Awaited<ReturnType<T>> | null>(null);
 
-  const call = useCallback(async (...args: unknown[]): Promise<T> => {
+  const call = useCallback(async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>>> => {
     setLoading(true);
     setError(null);
     try {
@@ -32,11 +33,23 @@ export function useRegisterUser() {
 export function useLoginUser() {
   return useApi(api.loginUser);
 }
+export function useGetUserProfile() {
+  return useApi(api.getUserProfile);
+}
 export function useUpdateUserProfile() {
   return useApi(api.updateUserProfile);
 }
 export function useChangePassword() {
   return useApi(api.changePassword);
+}
+export function useSubmitContactMessage() {
+  return useApi(api.submitContactMessage);
+}
+export function useGetAllComplaints() {
+  return useApi(api.getAllComplaints);
+}
+export function useUpdateComplaintStatus() {
+  return useApi(api.updateComplaintStatus);
 }
 
 // Project hooks

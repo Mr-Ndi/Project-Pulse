@@ -3,6 +3,7 @@ import { useDeleteProject, useEditProjectProfile } from "../../api/useProjectPul
 import { FaTasks } from "react-icons/fa";
 
 interface Project {
+  id?: string;
   name: string;
   description?: string;
   status: string;
@@ -24,7 +25,7 @@ export default function ProjectList({ projects, loading, error, onRefresh }: Pro
   const token = localStorage.getItem("token") || "";
   const [deleteProject] = useDeleteProject();
   const [editProject, { loading: editLoading }] = useEditProjectProfile();
-  const [localError, setLocalError] = useState("");
+  const [localError, setLocalError] = useState<string>("");
 
   const handleEdit = (idx: number) => {
     if (!projects) return;
@@ -126,14 +127,14 @@ export default function ProjectList({ projects, loading, error, onRefresh }: Pro
         </span>
       </div>
       
-      {error && (
+      {(error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-          {error.message || "Failed to load projects"}
+          {String((error as Error)?.message || "Failed to load projects")}
         </div>
-      )}
+      )) as React.ReactNode}
       {localError && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-          {localError}
+          {String(localError)}
         </div>
       )}
       
@@ -169,7 +170,7 @@ export default function ProjectList({ projects, loading, error, onRefresh }: Pro
             )}
             {projects && projects.map((proj: Project, idx: number) => (
               <tr
-                key={proj.id || idx}
+                key={proj.id || `project-${idx}`}
                 className={`border-b border-gray-100 hover:bg-blue-50 transition-colors ${
                   editIdx === idx ? 'bg-blue-50' : ''
                 }`}
@@ -242,7 +243,7 @@ export default function ProjectList({ projects, loading, error, onRefresh }: Pro
                         </button>
                         <button 
                           className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors" 
-                          onClick={() => handleDelete(proj.id)}
+                          onClick={() => handleDelete(proj.id as string)}
                         >
                           Delete
                         </button>

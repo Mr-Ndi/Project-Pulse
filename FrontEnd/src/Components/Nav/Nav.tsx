@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -43,38 +43,55 @@ export default function Nav() {
 
         {/* Desktop Navigation */}
         <ul className="hidden md:flex gap-6 items-center">
-          <li>
-            <Link to="/" className="text-gray-700 hover:text-blue-700 font-medium transition">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/feature" className="text-gray-700 hover:text-blue-700 font-medium transition">
-              Features
-            </Link>
-          </li>
-          <li>
-            <Link to="/about" className="text-gray-700 hover:text-blue-700 font-medium transition">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link to="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition">
-              Contact
-            </Link>
-          </li>
-          {isAuthenticated ? (
+          {!isAdmin && (
             <>
               <li>
-                <Link to="/dashboard" className="text-gray-700 hover:text-blue-700 font-medium transition">
-                  Dashboard
+                <Link to="/" className="text-gray-700 hover:text-blue-700 font-medium transition">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link to="/users" className="text-gray-700 hover:text-blue-700 font-medium transition">
-                  Users
+                <Link to="/feature" className="text-gray-700 hover:text-blue-700 font-medium transition">
+                  Features
                 </Link>
               </li>
+              <li>
+                <Link to="/about" className="text-gray-700 hover:text-blue-700 font-medium transition">
+                  About
+                </Link>
+              </li>
+              {isAuthenticated && (
+                <li>
+                  <Link to="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition">
+                    Contact
+                  </Link>
+                </li>
+              )}
+            </>
+          )}
+          {isAuthenticated ? (
+            <>
+              {!isAdmin && (
+                <li>
+                  <Link to="/dashboard" className="text-gray-700 hover:text-blue-700 font-medium transition">
+                    Dashboard
+                  </Link>
+                </li>
+              )}
+              {isAdmin && (
+                <>
+                  <li>
+                    <Link to="/users" className="text-gray-700 hover:text-blue-700 font-medium transition">
+                      Users
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/complaints" className="text-gray-700 hover:text-blue-700 font-medium transition">
+                      Messages
+                    </Link>
+                  </li>
+                </>
+              )}
               <li>
                 <Link 
                   to="/profile" 
@@ -135,50 +152,69 @@ export default function Nav() {
               className="absolute right-4 top-full mt-2 w-56 bg-white rounded-lg shadow-lg z-50 overflow-hidden border border-gray-200"
             >
               <div className="flex flex-col">
-                <Link 
-                  to="/" 
-                  className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition"
-                  onClick={() => setOpen(false)}
-                >
-                  Home
-                </Link>
-                <Link 
-                  to="/feature" 
-                  className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
-                  onClick={() => setOpen(false)}
-                >
-                  Features
-                </Link>
-                <Link 
-                  to="/about" 
-                  className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
-                  onClick={() => setOpen(false)}
-                >
-                  About
-                </Link>
-                <Link 
-                  to="/contact" 
-                  className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
-                  onClick={() => setOpen(false)}
-                >
-                  Contact
-                </Link>
-                {isAuthenticated ? (
+                {!isAdmin && (
                   <>
                     <Link 
-                      to="/dashboard" 
-                      className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                      to="/" 
+                      className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition"
                       onClick={() => setOpen(false)}
                     >
-                      Dashboard
+                      Home
                     </Link>
                     <Link 
-                      to="/users" 
+                      to="/feature" 
                       className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
                       onClick={() => setOpen(false)}
                     >
-                      Users
+                      Features
                     </Link>
+                    <Link 
+                      to="/about" 
+                      className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                      onClick={() => setOpen(false)}
+                    >
+                      About
+                    </Link>
+                    {isAuthenticated && (
+                      <Link 
+                        to="/contact" 
+                        className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                        onClick={() => setOpen(false)}
+                      >
+                        Contact
+                      </Link>
+                    )}
+                  </>
+                )}
+                {isAuthenticated ? (
+                  <>
+                    {!isAdmin && (
+                      <Link 
+                        to="/dashboard" 
+                        className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                        onClick={() => setOpen(false)}
+                      >
+                        Dashboard
+                      </Link>
+                    )}
+                    {isAdmin && (
+                      <>
+                        <Link 
+                          to="/users" 
+                          className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                          onClick={() => setOpen(false)}
+                        >
+                          Users
+                        </Link>
+                        <Link 
+                          to="/complaints" 
+                          className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t"
+                          onClick={() => setOpen(false)}
+                        >
+                          Messages
+                        </Link>
+                      </>
+                    )}
                     <Link 
                       to="/profile" 
                       className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition border-t flex items-center gap-2"

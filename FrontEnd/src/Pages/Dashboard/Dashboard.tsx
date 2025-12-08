@@ -26,7 +26,9 @@ export default function DashboardPage() {
     // Check if we came from login with success state
     const state = location.state as { showSuccess?: boolean; message?: string } | null;
     if (state?.showSuccess && state?.message) {
-      setToast({ message: state.message, type: 'success' });
+      queueMicrotask(() => {
+        setToast({ message: state.message!, type: 'success' });
+      });
       // Clear the state to prevent toast showing on refresh
       window.history.replaceState({}, document.title);
     }

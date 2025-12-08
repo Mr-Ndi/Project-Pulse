@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import Toast from "../../Components/Toast/Toast";
+import { getAllUsers } from "../../api/projectPulseApi";
 
 interface User {
   user_id: string;
@@ -14,11 +16,22 @@ interface User {
 
 export default function Users() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("all");
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
+
+  useEffect(() => {
+    // Check for success message from login
+    if (location.state?.showSuccess) {
+      setToast({ message: location.state.message || "Welcome!", type: "success" });
+      // Clear the state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   useEffect(() => {
     // Check if user is admin
@@ -36,8 +49,10 @@ export default function Users() {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
       const decoded = JSON.parse(jsonPayload);
+      const role = decoded.roles || decoded.role;
+      const normalizedRole = String(role || '').toLowerCase();
 
-      if (decoded.roles !== 'admin') {
+      if (!normalizedRole.includes('admin')) {
         navigate('/dashboard');
         return;
       }
@@ -52,19 +67,7 @@ export default function Users() {
   const fetchUsers = async (token: string) => {
     try {
       setLoading(true);
-      const response = await fetch('https://ppulse-backend.onrender.com/api/users', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch users');
-      }
-
-      const data = await response.json();
+      const data = await getAllUsers(token);
       setUsers(data.users || data || []);
     } catch (err) {
       setError("Failed to load users. Please try again later.");
@@ -283,6 +286,13 @@ export default function Users() {
           )}
         </div>
       </main>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
       <Footer />
     </div>
   );

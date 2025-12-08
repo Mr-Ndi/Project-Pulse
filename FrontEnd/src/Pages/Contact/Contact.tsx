@@ -1,18 +1,32 @@
 import { useState } from "react";
 import Footer from "../../Components/Footer/Footer";
 import Nav from "../../Components/Nav/Nav";
+import Toast from "../../Components/Toast/Toast";
+import { useSubmitContactMessage } from "../../api/useProjectPulseApi";
 
 export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [sent, setSent] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
+  const [submitMessage, submitState] = useSubmitContactMessage();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate sending
-    setSent(true);
-    setTimeout(() => setSent(false), 3000);
+    
+    try {
+      await submitMessage({ name, email, message });
+      setToast({ message: "Message sent successfully! We'll get back to you soon.", type: "success" });
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (err: unknown) {
+      const errorObj = err as Record<string, unknown>;
+      setToast({ 
+        message: (errorObj?.message as string) || "Failed to send message. Please try again.", 
+        type: "error" 
+      });
+    }
   };
 
   return (
@@ -82,22 +96,23 @@ export default function Contact() {
                 
                 <button
                   type="submit"
-                  className="w-full bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition font-semibold flex items-center justify-center gap-2"
+                  disabled={submitState.loading}
+                  className="w-full bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
-                  Send Message
+                  {submitState.loading ? (
+                    <>
+                      <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                      </svg>
+                      Send Message
+                    </>
+                  )}
                 </button>
-                
-                {sent && (
-                  <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Message sent successfully! We'll get back to you soon.
-                  </div>
-                )}
               </form>
             </div>
 
@@ -173,6 +188,13 @@ export default function Contact() {
           </div>
         </div>
       </main>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
       <Footer />
     </div>
   );

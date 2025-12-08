@@ -18,7 +18,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setToast(null);
-    
+
     if (!email || !password) {
       setToast({ message: "Please enter both email and password", type: 'error' });
       return;
@@ -28,14 +28,36 @@ export default function Login() {
       // Backend returns the token as a raw string
       if (typeof res === 'string' && res.length > 0) {
         login(res);
-        navigate("/dashboard", { state: { showSuccess: true, message: "Login successful! Welcome back 🎉" } });
+
+        // Decode token to check if user is admin
+        try {
+          const base64Url = res.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
+          const decoded = JSON.parse(jsonPayload);
+
+          // Redirect admins to users page, regular users to dashboard
+          const role = decoded.roles || decoded.role;
+          const normalizedRole = String(role).toLowerCase();
+
+          if (normalizedRole === 'admin' || normalizedRole.includes('admin')) {
+            navigate("/users", { state: { showSuccess: true, message: "Welcome back, Admin! 🎉" } });
+          } else {
+            navigate("/dashboard", { state: { showSuccess: true, message: "Login successful! Welcome back 🎉" } });
+          }
+        } catch {
+          // If token decoding fails, default to dashboard
+          navigate("/dashboard", { state: { showSuccess: true, message: "Login successful! Welcome back 🎉" } });
+        }
       } else {
         setToast({ message: "Invalid email or password. Please try again.", type: 'error' });
       }
     } catch (err: unknown) {
       const error = err as Record<string, unknown>;
       const errorMessage = error?.message as string;
-      
+
       // Handle specific error messages from backend
       if (errorMessage?.toLowerCase().includes("password")) {
         setToast({ message: "Incorrect password. Please try again.", type: 'error' });

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
 import { useAuth } from "../../hooks/useAuth";
-import { useUpdateUserProfile, useChangePassword } from "../../api/useProjectPulseApi";
+import { useUpdateUserProfile, useChangePassword, useGetUserProfile } from "../../api/useProjectPulseApi";
 
 // Helper function to decode JWT
 function decodeJWT(token: string) {
@@ -19,12 +19,21 @@ function decodeJWT(token: string) {
   }
 }
 
+// Helper function to format role for display
+function formatRole(role: string): string {
+  if (!role) return "User";
+  // Handle cases like "admin", "user", or "UserRole.ADMIN"
+  const cleaned = role.toLowerCase().split('.').pop() || "user";
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+}
+
 export default function Profile() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const [updateProfile, updateState] = useUpdateUserProfile();
-  const [changePassword, changePasswordState] = useChangePassword();
-  
+  const [changePassword] = useChangePassword();
+  const [getProfile] = useGetUserProfile();
+
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState({
     name: "",
@@ -33,7 +42,7 @@ export default function Profile() {
     role: "",
     createdAt: "",
   });
-  
+
   const [editForm, setEditForm] = useState({
     full_name: "",
   });
@@ -52,7 +61,7 @@ export default function Profile() {
     if (token) {
       const decoded = decodeJWT(token);
       if (decoded) {
-        Promise.resolve().then(() => {
+        queueMicrotask(() => {
           const userData = {
             name: decoded.full_name || "User",
             email: decoded.email || "",
@@ -66,8 +75,27 @@ export default function Profile() {
           });
         });
       }
+      // Then fetch fresh data from API
+      getProfile(token).then((data) => {
+        if (data && data.user) {
+          const freshUser = {
+            name: data.user.full_name,
+            email: data.user.email,
+            userId: data.user.user_id,
+            role: data.user.roles,
+            createdAt: data.user.created_at,
+          };
+          setUser(freshUser);
+          setEditForm({
+            full_name: freshUser.name,
+          });
+        }
+      }).catch((err) => {
+        console.error("Failed to fetch profile:", err);
+        // Don't show error to user as we have token data fallback
+      });
     }
-  }, []);
+  }, [getProfile]);
 
   const handleLogout = () => {
     logout();
@@ -95,7 +123,7 @@ export default function Profile() {
       setUser({ ...user, name: editForm.full_name });
       setSuccess("Profile updated successfully!");
       setIsEditing(false);
-      
+
       setTimeout(() => setSuccess(""), 3000);
     } catch (err: unknown) {
       const errorObj = err as Record<string, unknown>;
@@ -142,10 +170,10 @@ export default function Profile() {
         },
         token
       );
-      
+
       setSuccess("Password updated successfully!");
       setPasswordForm({ current_password: "", new_password: "", confirm_password: "" });
-      
+
       setTimeout(() => setSuccess(""), 3000);
     } catch (err: unknown) {
       const errorObj = err as Record<string, unknown>;
@@ -211,7 +239,7 @@ export default function Profile() {
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                       </svg>
-                      {user.role}
+                      {formatRole(user.role)}
                     </span>
                   </div>
                 </div>
@@ -236,7 +264,7 @@ export default function Profile() {
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="text-sm font-semibold text-gray-500 uppercase mb-1">Account Type</div>
-                    <div className="text-lg text-gray-900 capitalize">{user.role || "User"}</div>
+                    <div className="text-lg text-gray-900">{formatRole(user.role)}</div>
                   </div>
                 </div>
               </div>
@@ -253,13 +281,13 @@ export default function Profile() {
                   Edit Profile
                 </button>
                 <button
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate(isAdmin ? '/users' : '/dashboard')}
                   className="flex-1 bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold flex items-center justify-center gap-2"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                   </svg>
-                  Go to Dashboard
+                  Go to {isAdmin ? 'Users' : 'Dashboard'}
                 </button>
                 <button
                   onClick={handleLogout}

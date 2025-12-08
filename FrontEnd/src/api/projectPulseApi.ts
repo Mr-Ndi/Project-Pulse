@@ -1,12 +1,11 @@
 // src/api/projectPulseApi.ts
 // Centralized API service for Project Pulse backend
 
-const BASE_URL = "https://ppulse-backend.onrender.com";
-// const BASE_URL = "http://localhost:8000";
+// const BASE_URL = "https://ppulse-backend.onrender.com";
+const BASE_URL = "http://localhost:8000";
 // Helper for requests
 async function request(path: string, options: RequestInit = {}) {
   const url = `${BASE_URL}${path}`;
-  console.log('[API Request]', options.method || 'GET', url, options.body ? JSON.parse(options.body as string) : null);
 
   const { headers: optionsHeaders, ...restOptions } = options;
   const res = await fetch(url, {
@@ -18,7 +17,6 @@ async function request(path: string, options: RequestInit = {}) {
   });
 
   const text = await res.text();
-  console.log('[API Response]', res.status, res.statusText, text);
 
   let data;
   try {
@@ -28,7 +26,6 @@ async function request(path: string, options: RequestInit = {}) {
   }
 
   if (!res.ok) {
-    console.error('[API Error]', res.status, data);
     // Extract error message from various formats
     const errorMessage = data?.detail || data?.message || data?.error || res.statusText;
     throw { message: errorMessage, status: res.status, ...data };
@@ -44,10 +41,25 @@ export function registerUser(payload: { email: string; password: string; full_na
   });
 }
 
+export function getAllUsers(token: string) {
+  return request("/api/users", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+
 export function loginUser(payload: { email: string; password: string }) {
   return request("/api/login", {
     method: "POST",
     body: JSON.stringify(payload),
+  });
+}
+
+export function getUserProfile(token: string) {
+  return request("/api/profile", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
   });
 }
 
@@ -63,6 +75,28 @@ export function changePassword(payload: { current_password: string; new_password
   return request("/api/change-password", {
     method: "PUT",
     body: JSON.stringify(payload),
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export function submitContactMessage(payload: { name: string; email: string; message: string }) {
+  return request("/api/contact", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function getAllComplaints(token: string) {
+  return request("/api/complaints", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export function updateComplaintStatus(id: string, status: string, token: string) {
+  return request(`/api/complaints/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
     headers: { Authorization: `Bearer ${token}` },
   });
 }
