@@ -1,8 +1,8 @@
 // src/api/projectPulseApi.ts
 // Centralized API service for Project Pulse backend
 
-// const BASE_URL = "https://ppulse-backend.onrender.com";
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "https://project-pulse-backend-ew63.onrender.com";
+// const BASE_URL = "http://localhost:8000";
 // Helper for requests
 async function request(path: string, options: RequestInit = {}) {
   const url = `${BASE_URL}${path}`;
