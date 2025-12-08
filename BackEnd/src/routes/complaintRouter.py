@@ -20,7 +20,7 @@ def verify_admin(credentials: HTTPAuthorizationCredentials = Depends(bearer_sche
     try:
         token = credentials.credentials
         payload = jwt.decode(token, options={"verify_signature": False})
-        user_role = payload.get("roles")
+        user_role = str(payload.get("roles", "")).lower()
         
         if user_role != "admin":
             raise HTTPException(status_code=403, detail="Admin access required")

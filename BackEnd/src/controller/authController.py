@@ -32,4 +32,13 @@ async def get_all():
     result = await get_all_users(engine)
     if not result:
         raise HTTPException(status_code=404, detail="No users found")
-    return result
+    # Convert to response format with lowercase role names
+    return [
+        {
+            "id": user.id,
+            "full_name": user.full_name,
+            "email": user.email,
+            "roles": str(user.role).lower()
+        }
+        for user in result
+    ]

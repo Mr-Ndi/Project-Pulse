@@ -32,7 +32,7 @@ async def authenticate_user(engine, email, password):
                 "user_id": str(result_user.id),
                 "email": result_user.email,
                 "full_name": result_user.full_name,
-                "roles": result_user.role
+                "roles": result_user.role.value.lower()
             }
             token = create_access_token(data=token_data)
             return token
@@ -70,4 +70,3 @@ async def get_all_users(engine):
     async with session() as db_session:
         users = await db_session.execute(select(UserBase))
         return users.scalars().all()
-    

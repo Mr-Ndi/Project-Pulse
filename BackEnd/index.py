@@ -15,10 +15,12 @@ app = FastAPI(
     swagger_ui_parameters={"defaultModelsExpandDepth": -1}
 )
 
-# Allow CORS from anywhere
+# CORS: explicitly allow local dev and production origin
+prod_origin = os.getenv("PROD_ORIGIN")
+origins = ["http://localhost:5173"] + ([prod_origin] if prod_origin else [])
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

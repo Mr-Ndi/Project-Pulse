@@ -31,3 +31,18 @@ class UserUpdateSchema(BaseModel):
 class UserLoginSchema(BaseModel):
     email: str = Field(..., example = "tester@gmail.com")
     password: str = Field(..., example = "Tester#250")
+
+
+class UserResponseSchema(BaseModel):
+    """Response schema for a single user (admin list view)."""
+    user_id: UUID = Field(..., alias="id")
+    full_name: Optional[str] = None
+    email: str
+    roles: str
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+
+class UsersListResponseSchema(BaseModel):
+    """Response schema for list of users."""
+    users: list[UserResponseSchema]
+    model_config = ConfigDict(from_attributes=True)
